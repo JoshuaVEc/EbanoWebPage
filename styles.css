@@ -1448,19 +1448,10 @@ button {
 
 .footer__bottom-inner {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  flex-wrap: wrap;
+  text-align: center;
   gap: 1rem;
-}
-
-.footer__legal {
-  display: flex;
-  gap: 1.5rem;
-}
-
-.footer__legal a:hover {
-  color: var(--text-soft);
 }
 
 /* Floating WhatsApp Logo Button in bottom-right (contour shape, no green box/circle) */
