@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ÉBANO | Kitchen &amp; Bar</title>
+  <meta name="description" content="Ébano Kitchen & Bar: Cocina típica esmeraldeña y coctelería tradicional global en un ambiente minimalista y contemporáneo.">
+  <meta name="theme-color" content="#0B192C">
+  <link rel="icon" type="image/png" href="logo.png?v=2">
+  <link rel="shortcut icon" type="image/png" href="logo.png?v=2">
+  <link rel="apple-touch-icon" href="logo.png?v=2">
+
+  <!-- Google Fonts: Cormorant Garamond (Komein-style Serif) & Plus Jakarta Sans (NOE-style Clean Geometric Sans) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Borderless Minimalist Header (Inspired by NOE reference) -->
+  <header class="header" id="header">
+    <div class="container header__inner">
+      <nav class="nav nav--left" aria-label="Navegación izquierda">
+        <a href="#inicio" class="nav__link">INICIO</a>
+        <a href="#carta" class="nav__link">MENÚ</a>
+        <a href="#bar" class="nav__link">COCTELES</a>
+        <a href="#esencia" class="nav__link">NOSOTROS</a>
+      </nav>
+
+      <a href="#inicio" class="brand" aria-label="Ébano Kitchen & Bar - Inicio">
+        <img src="ebano-logo.png" alt="Ébano Kitchen & Bar" width="185" height="70" class="brand__logo">
+      </a>
+
+      <div class="nav nav--right">
+        <a href="#horarios" class="nav__link">HORARIOS</a>
+        <a href="#mapa" class="nav__link">DIRECCIÓN</a>
+        <a href="#reservas" class="nav__link">RESERVAS</a>
+        <a href="#ubicacion" class="nav__link">CONTACTOS</a>
+      </div>
+
+      <button type="button" class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="mobileNav" aria-label="Abrir menú">
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div class="mobile-nav" id="mobileNav" hidden>
+      <nav class="mobile-nav__links" aria-label="Navegación móvil">
+        <a href="#inicio" class="mobile-nav__link">INICIO</a>
+        <a href="#carta" class="mobile-nav__link">MENÚ</a>
+        <a href="#bar" class="mobile-nav__link">COCTELES</a>
+        <a href="#esencia" class="mobile-nav__link">NOSOTROS</a>
+        <a href="#horarios" class="mobile-nav__link">HORARIOS</a>
+        <a href="#mapa" class="mobile-nav__link">DIRECCIÓN</a>
+        <a href="#reservas" class="mobile-nav__link">RESERVAS</a>
+        <a href="#ubicacion" class="mobile-nav__link">CONTACTOS</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="inicio">
+    <!-- MINIMALIST HERO SLIDER / SHOWCASE (Full-Section Background Photo) -->
+    <section class="hero" aria-labelledby="heroTitle">
+      <div class="hero__visual">
+        <!-- Full-Screen LCP Image with fetchpriority="high" -->
+        <img
+          id="heroSlideImg"
+          src="fotos/hd/terraza-atardecer-hd.jpg"
+          alt="Terraza frente al mar y coctelería en Ébano Kitchen & Bar"
+          class="hero__img is-animating"
+          fetchpriority="high"
+          width="1600"
+          height="1200"
+        >
+      </div>
+
+      <button type="button" class="hero__arrow hero__arrow--prev" id="heroPrevBtn" aria-label="Anterior">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+
+      <div class="container hero__grid">
+        <div class="hero__copy">
+          <span class="hero__kicker" id="heroKicker">COCINA ESMERALDEÑA &amp; BAR</span>
+          <h1 id="heroTitle" class="hero__title">
+            SABOR DEL PACÍFICO
+            <span class="hero__title-sub" id="heroSubtitle">Y COCTELERÍA DE LA CASA</span>
+          </h1>
+          <p class="hero__highlight" id="heroHighlight">DESAYUNOS · MARISCOS · COCTELERÍA</p>
+          <p class="hero__note" id="heroNote">*Tradición esmeraldeña y coctelería clásica global frente al mar en Tonsupa.</p>
+
+          <div class="hero__actions">
+            <a href="#carta" class="btn btn--blue" id="heroPrimaryCta">EXPLORAR LA CARTA</a>
+          </div>
+        </div>
+      </div>
+
+      <button type="button" class="hero__arrow hero__arrow--next" id="heroNextBtn" aria-label="Siguiente">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+
+      <!-- Minimal bottom slide indicators like NOE -->
+      <div class="hero__dots" role="tablist" aria-label="Diapositivas principales">
+        <button type="button" class="hero__dot is-active" data-slide="0" aria-label="Coctelería de la Casa"></button>
+        <button type="button" class="hero__dot" data-slide="1" aria-label="Especialidades del Mar y Tierra"></button>
+        <button type="button" class="hero__dot" data-slide="2" aria-label="Mañanas Esmeraldeñas"></button>
+      </div>
+    </section>
+
+    <!-- PLATOS DESTACADOS (Minimalist Curated Strip) -->
+    <section class="section featured" id="destacados" aria-labelledby="featuredTitle">
+      <div class="container">
+        <div class="section-header">
+          <span class="kicker">SELECCIÓN DE LA CASA</span>
+          <h2 id="featuredTitle" class="section-title">Especialidades Ébano</h2>
+        </div>
+
+        <div class="featured__grid" id="featuredGrid">
+          <!-- Populated by app.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- LA CARTA COMPLETA (Clean Minimalist Typography Menu) -->
+    <section class="section menu-section" id="carta" aria-labelledby="menuTitle">
+      <div class="container">
+        <div class="section-header">
+          <span class="kicker">GASTRONOMÍA &amp; COCTELERÍA</span>
+          <h2 id="menuTitle" class="section-title">Nuestra Carta</h2>
+        </div>
+
+        <!-- Clean Minimalist Moment Tabs (No borders, subtle opacity/active indicator) -->
+        <div class="menu-moments" role="tablist" aria-label="Momentos gastronómicos">
+          <button type="button" role="tab" aria-selected="true" class="moment-tab is-active" data-moment="all">
+            TODA LA CARTA
+          </button>
+          <button type="button" role="tab" aria-selected="false" class="moment-tab" data-moment="mananas">
+            MAÑANAS &amp; BOLONES
+          </button>
+          <button type="button" role="tab" aria-selected="false" class="moment-tab" data-moment="principal">
+            MAR Y TIERRA
+          </button>
+          <button type="button" role="tab" aria-selected="false" class="moment-tab" data-moment="refrescos">
+            POSTRES &amp; BEBIDAS
+          </button>
+          <button type="button" role="tab" aria-selected="false" class="moment-tab" data-moment="bar">
+            COCTELES
+          </button>
+        </div>
+
+        <!-- Minimal Search & Category Filter -->
+        <div class="menu-controls">
+          <div class="search-box">
+            <svg class="search-box__icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input
+              type="search"
+              id="menuSearchInput"
+              class="search-box__input"
+              placeholder="Buscar plato o coctel..."
+              aria-label="Buscar en el menú"
+            >
+            <button type="button" id="clearSearchBtn" class="search-box__clear" hidden aria-label="Limpiar búsqueda">✕</button>
+          </div>
+
+          <div class="category-pills" id="categoryPills" role="region" aria-label="Filtrar por categoría">
+            <!-- Populated by app.js -->
+          </div>
+        </div>
+
+        <!-- Menu Items Container -->
+        <div id="menuContainer" class="menu-container" aria-live="polite">
+          <!-- Populated by app.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- COCTELERÍA SPOTLIGHT (Diffused Dark Slate-Blue Banner like NOE) -->
+    <section class="section bar-banner" id="bar" aria-labelledby="barTitle">
+      <div class="container bar-banner__grid">
+        <div class="bar-banner__copy">
+          <span class="hero__kicker">BAR &amp; LOUNGE</span>
+          <h2 id="barTitle" class="bar-banner__title">
+            COCTELERÍA CLÁSICA
+            <span>INTERNACIONAL</span>
+          </h2>
+          <p class="bar-banner__text">
+            Aperol Spritz, Expreso Martiny, Clavo Oxidado, Caipiriña, Gin Tonic y nuestras creaciones tropicales como Coco Loco y Menta Playera.
+          </p>
+          <button type="button" class="btn btn--blue" data-jump-category="cocteles">
+            VER TODOS LOS COCTELES
+          </button>
+        </div>
+        <div class="bar-banner__img-wrap">
+          <img
+            src="fotos/hd/aperol-spritz-hd.jpg"
+            alt="Cocteles Aperol Spritz en Ébano Kitchen & Bar"
+            loading="lazy"
+            width="750"
+            height="500"
+          >
+        </div>
+      </div>
+    </section>
+
+    <!-- CENTERED ATMOSPHERIC BANNER (Inspired directly by Komein en La Floresta reference) -->
+    <section class="komein-banner" id="esencia" aria-labelledby="essenceTitle">
+      <div class="komein-banner__bg">
+        <img
+          src="fotos/hd/salon-mural-hd.jpg"
+          alt="Salón principal y mural esmeraldeño de Ébano Kitchen & Bar"
+          loading="lazy"
+          width="1600"
+          height="800"
+        >
+        <div class="komein-banner__overlay"></div>
+      </div>
+
+      <div class="container komein-banner__content">
+        <h2 id="essenceTitle" class="komein-banner__title">Ébano Kitchen &amp; Bar</h2>
+        <p class="komein-banner__text">
+          Con la auténtica herencia gastronómica de <strong>Esmeraldas y su sazón costeña</strong>, somos un punto de encuentro contemporáneo.<br>
+          Desayunos tradicionales, mariscos frescos, cortes a las brasas y distintos ambientes pensados para compartir, disfrutar y quedarse.<br>
+          ¡Bienvenidos!
+        </p>
+        <a href="#reservas" class="btn btn--sand">RESERVAR UNA MESA</a>
+      </div>
+    </section>
+
+    <!-- HORARIOS DE ATENCIÓN (Minimalist Architectural Schedule Section) -->
+    <section class="section hours-section" id="horarios" aria-labelledby="horariosTitle">
+      <div class="container">
+        <div class="hours-grid">
+          <!-- Columna Izquierda: Presentación, Estado en Vivo e Imagen -->
+          <div class="hours-intro">
+            <span class="kicker">PLANIFICA TU VISITA · TONSUPA</span>
+            <h2 id="horariosTitle" class="section-title hours-intro__title">Horarios de Atención</h2>
+            <p class="hours-intro__desc">
+              Te esperamos frente al mar desde nuestras mañanas de café recién pasado, bolones y tigrillos, hasta nuestros almuerzos marineros y coctelería al atardecer.
+            </p>
+
+            <div class="hours-visual">
+              <img
+                src="fotos/hd/atardecer-tonsupa-hd.jpg"
+                alt="Atardecer frente al mar en Tonsupa desde Ébano Kitchen & Bar"
+                loading="lazy"
+                width="720"
+                height="440"
+              >
+              <div class="hours-visual__caption">
+                <span>Tonsupa, Esmeraldas – Ecuador</span>
+                <a href="#reservas" class="hours-visual__link">Reservar mesa →</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Columna Derecha: Tabla Minimalista de Horarios -->
+          <div class="hours-card" aria-label="Tabla semanal de horarios">
+            <div class="hours-card__header">
+              <span class="hours-card__kicker">SEMANA COMPLETA</span>
+              <h3 class="hours-card__title">Días &amp; Apertura</h3>
+            </div>
+
+            <ul class="hours-list" id="hoursList">
+              <li class="hours-row" data-day="0">
+                <span class="hours-row__day">
+                  Domingo
+                  <span class="hours-row__today-badge" hidden>HOY</span>
+                </span>
+                <span class="hours-row__line" aria-hidden="true"></span>
+                <span class="hours-row__time">8:30 AM – 7:30 PM</span>
+              </li>
+
+              <li class="hours-row" data-day="1">
+                <span class="hours-row__day">
+                  Lunes
+                  <span class="hours-row__today-badge" hidden>HOY</span>
+                </span>
+                <span class="hours-row__line" aria-hidden="true"></span>
+                <span class="hours-row__time">9:00 AM – 7:30 PM</span>
+              </li>
+
+              <li class="hours-row hours-row--closed" data-day="2">
+                <span class="hours-row__day">
+                  Martes
+                  <span class="hours-row__today-badge" hidden>HOY</span>
+                </span>
+                <span class="hours-row__line" aria-hidden="true"></span>
+                <span class="hours-row__time hours-row__time--closed">Cerrado</span>
+              </li>
+
+              <li class="hours-row hours-row--closed" data-day="3">
+                <span class="hours-row__day">
+                  Miércoles
+                  <span class="hours-row__today-badge" hidden>HOY</span>
+                </span>
+                <span class="hours-row__line" aria-hidden="true"></span>
+                <span class="hours-row__time hours-row__time--closed">Cerrado</span>
+              </li>
+
+              <li class="hours-row" data-day="4">
+                <span class="hours-row__day">
+                  Jueves
+                  <span class="hours-row__today-badge" hidden>HOY</span>
+                </span>
+                <span class="hours-row__line" aria-hidden="true"></span>
+                <span class="hours-row__time">8:00 AM – 7:30 PM</span>
+              </li>
+
+              <li class="hours-row" data-day="5">
+                <span class="hours-row__day">
+                  Viernes
+                  <span class="hours-row__today-badge" hidden>HOY</span>
+                </span>
+                <span class="hours-row__line" aria-hidden="true"></span>
+                <span class="hours-row__time">8:00 AM – 7:30 PM</span>
+              </li>
+
+              <li class="hours-row" data-day="6">
+                <span class="hours-row__day">
+                  Sábado
+                  <span class="hours-row__today-badge" hidden>HOY</span>
+                </span>
+                <span class="hours-row__line" aria-hidden="true"></span>
+                <span class="hours-row__time">8:00 AM – 7:30 PM</span>
+              </li>
+            </ul>
+
+            <div class="hours-card__footer">
+              <p>* Desayunos desde la hora de apertura · Cocina, parrilla y coctelería hasta las 7:30 PM.</p>
+              <div class="hours-card__actions">
+                <a href="#reservas" class="btn btn--sand">RESERVAR EN ESTE HORARIO</a>
+                <a href="https://wa.me/593999002427?text=Hola%20%C3%89bano%20Kitchen%20%26%20Bar%2C%20quisiera%20consultar%20disponibilidad." target="_blank" rel="noopener noreferrer" class="btn btn--ghost">CONSULTAR POR WHATSAPP</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DIRECCIÓN & MAPA INTERACTIVO -->
+    <section class="section map-section" id="mapa" aria-labelledby="mapTitle">
+      <div class="container">
+        <div class="section-header map-section__header">
+          <span class="kicker">ENCUÉNTRANOS EN TONSUPA</span>
+          <h2 id="mapTitle" class="section-title">Dirección &amp; Ubicación</h2>
+          <p class="map-section__sub">
+            Av. Diamond Beach / Makana Resort · Tonsupa, Esmeraldas – Ecuador
+          </p>
+        </div>
+
+        <div class="map-frame">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.1764!2d-79.8024118!3d0.9000261!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8fd49500162e5d33%3A0x379235ae6598a9b7!2s%C3%89BANO%20KITCHEN%20%26%20BAR!5e0!3m2!1ses!2sec!4v1729880000000!5m2!1ses!2sec"
+            title="Ubicación de Ébano Kitchen & Bar en Google Maps"
+            width="1200"
+            height="500"
+            style="border:0;"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+          ></iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- MINIMALIST RESERVATION SECTION (Última sección antes de Contactos) -->
+    <section class="section reservations" id="reservas" aria-labelledby="reservasTitle">
+      <div class="container reservations__inner">
+        <div class="reservations__header">
+          <span class="kicker">RESERVACIONES</span>
+          <h2 id="reservasTitle" class="section-title">Reserva tu Mesa</h2>
+          <p class="reservations__sub">
+            Jueves a Sábado (8:00 AM – 7:30 PM) · Domingo (8:30 AM – 7:30 PM) · Lunes (9:00 AM – 7:30 PM).
+          </p>
+        </div>
+
+        <form id="reservationForm" class="res-form" novalidate>
+          <div class="form-row">
+            <div class="field">
+              <label for="guestName">Nombre completo</label>
+              <span id="name-hint" class="hint">¿A nombre de quién registramos la mesa?</span>
+              <input
+                type="text"
+                id="guestName"
+                name="guestName"
+                required
+                minlength="2"
+                autocomplete="name"
+                placeholder="Tu nombre"
+                aria-describedby="name-hint"
+                aria-errormessage="name-error"
+              >
+              <div id="name-error" class="error-msg">Ingresa tu nombre completo.</div>
+            </div>
+
+            <div class="field">
+              <label for="guestPhone">Teléfono / WhatsApp</label>
+              <span id="phone-hint" class="hint">Ej. 099 123 4567</span>
+              <input
+                type="tel"
+                id="guestPhone"
+                name="guestPhone"
+                required
+                pattern="[\+\d\s\-]{7,18}"
+                inputmode="tel"
+                autocomplete="tel"
+                placeholder="099 000 0000"
+                aria-describedby="phone-hint"
+                aria-errormessage="phone-error"
+              >
+              <div id="phone-error" class="error-msg">Ingresa un número de teléfono válido.</div>
+            </div>
+          </div>
+
+          <div class="form-row form-row--3">
+            <div class="field">
+              <label for="guestCount">Personas</label>
+              <span id="count-hint" class="hint">De 1 a 25 comensales</span>
+              <input
+                type="number"
+                id="guestCount"
+                name="guestCount"
+                required
+                min="1"
+                max="25"
+                value="2"
+                aria-describedby="count-hint"
+                aria-errormessage="count-error"
+              >
+              <div id="count-error" class="error-msg">Indica entre 1 y 25 personas.</div>
+            </div>
+
+            <div class="field">
+              <label for="resDate">Fecha</label>
+              <span id="date-hint" class="hint">Día de tu visita</span>
+              <input
+                type="date"
+                id="resDate"
+                name="resDate"
+                required
+                aria-describedby="date-hint"
+                aria-errormessage="date-error"
+              >
+              <div id="date-error" class="error-msg">Selecciona una fecha válida.</div>
+            </div>
+
+            <div class="field">
+              <label for="resTime">Horario</label>
+              <span id="time-hint" class="hint">Momento del día</span>
+              <select id="resTime" name="resTime" required aria-describedby="time-hint" aria-errormessage="time-error">
+                <option value="">Seleccionar...</option>
+                <option value="08:30 AM (Desayuno)">08:30 AM · Desayuno</option>
+                <option value="10:00 AM (Brunch)">10:00 AM · Brunch</option>
+                <option value="12:30 PM (Almuerzo)">12:30 PM · Almuerzo</option>
+                <option value="02:00 PM (Almuerzo)">02:00 PM · Almuerzo</option>
+                <option value="04:30 PM (Tarde & Mariscos)">04:30 PM · Tarde &amp; Mariscos</option>
+                <option value="06:00 PM (Atardecer & Coctelería)">06:00 PM · Atardecer &amp; Coctelería</option>
+                <option value="07:00 PM (Cena & Cocteles)">07:00 PM · Cena &amp; Cocteles</option>
+              </select>
+              <div id="time-error" class="error-msg">Selecciona un horario.</div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="resZone">Ambiente preferido</label>
+            <span id="zone-hint" class="hint">Salón, terraza o barra</span>
+            <select id="resZone" name="resZone" aria-describedby="zone-hint">
+              <option value="Salón Principal">Salón Principal</option>
+              <option value="Zona Bar & Coctelería">Zona Bar &amp; Coctelería</option>
+              <option value="Terraza">Terraza</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="resNotes">Notas especiales (opcional)</label>
+            <span id="notes-hint" class="hint">Comentarios adicionales para tu mesa (ej. cumpleaños, alergias)</span>
+            <textarea
+              id="resNotes"
+              name="resNotes"
+              rows="2"
+              placeholder="Ej. Celebración de cumpleaños, mesa junto a la ventana..."
+              aria-describedby="notes-hint"
+            ></textarea>
+          </div>
+
+          <div class="res-form__actions">
+            <button type="submit" class="btn btn--sand">
+              CONFIRMAR RESERVA POR WHATSAPP
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- MINIMALIST PURE DARK FOOTER (Inspired directly by Komein reference) -->
+  <footer class="footer" id="ubicacion">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <a href="#inicio" class="brand brand--footer">
+            <span class="brand__name">ÉBANO</span>
+            <span class="brand__sub">KITCHEN &amp; BAR</span>
+          </a>
+          <p class="footer__tagline">Cocina típica esmeraldeña, el sabor nace en la costa.</p>
+        </div>
+
+        <div class="footer__links-col">
+          <a href="#esencia">Nosotros</a>
+          <a href="#horarios">Horarios</a>
+          <a href="#reservas">Reservas</a>
+        </div>
+
+        <div class="footer__links-col">
+          <a href="#carta">Menú</a>
+          <a href="#bar">Cócteles</a>
+          <a href="#mapa">Ubicación</a>
+        </div>
+
+        <div class="footer__contact-col">
+          <p class="footer__address">Av. Diamond Beach / Makana Resort · Tonsupa, Esmeraldas – Ecuador</p>
+          <p class="footer__phone">Reservas: <a href="https://wa.me/593999002427" target="_blank" rel="noopener noreferrer">0999002427</a></p>
+
+          <div class="footer__socials">
+            <a href="https://www.facebook.com/profile.php?id=61593201235824" target="_blank" rel="noopener noreferrer" aria-label="Facebook de Ébano Kitchen & Bar" class="social-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+              </svg>
+            </a>
+            <a href="https://www.instagram.com/ebano_kitchenbar/" target="_blank" rel="noopener noreferrer" aria-label="Instagram de Ébano Kitchen & Bar" class="social-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+              </svg>
+            </a>
+            <a href="https://www.tiktok.com/@ebano_tonsupa?is_from_webapp=1&amp;sender_device=pc" target="_blank" rel="noopener noreferrer" aria-label="TikTok de Ébano Kitchen & Bar" class="social-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+              </svg>
+            </a>
+            <a href="https://wa.me/593999002427?text=Hola%20%C3%89bano%20Kitchen%20%26%20Bar%2C%20me%20gustar%C3%ADa%20hacer%20una%20consulta%20o%20reserva." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp de Ébano Kitchen & Bar" class="social-icon">
+              <svg width="24" height="24" viewBox="5.8 5.8 12.5 12.5" fill="currentColor" aria-hidden="true">
+                <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      <div class="container footer__bottom-inner">
+        <p>Copyright © <span id="currentYear">2026</span> ÉBANO KITCHEN &amp; BAR</p>
+        <div class="footer__legal">
+          <a href="#inicio">Privacidad</a>
+          <a href="#inicio">Términos de Uso</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- FLOATING WHATSAPP ICON -->
+  <a
+    href="https://wa.me/593999002427?text=Hola%20%C3%89bano%20Kitchen%20%26%20Bar%2C%20me%20gustar%C3%ADa%20hacer%20una%20consulta%20o%20reserva."
+    target="_blank"
+    rel="noopener noreferrer"
+    class="floating-wa"
+    aria-label="Contactar por WhatsApp"
+  >
+    <img src="whatsapp-logo.png" alt="" width="64" height="64" class="floating-wa__img">
+  </a>
+
+  <!-- MODAL: DISH / COCKTAIL DETAIL DIALOG -->
+  <dialog id="dishDialog" class="modal" closedby="any" aria-labelledby="dialogDishTitle">
+    <div class="modal__box">
+      <button type="button" class="modal__close" data-close-dialog="dishDialog" aria-label="Cerrar ventana">✕</button>
+      <div class="modal__content" id="dishDialogBody"></div>
+    </div>
+  </dialog>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
