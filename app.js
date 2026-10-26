@@ -35,7 +35,7 @@ const HERO_SLIDES = [
     kicker: 'FRENTE AL MAR EN TONSUPA',
     title: 'BRISA Y TRADICIÓN',
     subtitle: 'MAÑANAS, ALMUERZOS Y ATARDECERES',
-    highlight: 'JUE A SÁB 08:00 AM · DOM 08:30 AM · LUN 09:00 AM (HASTA 07:30 PM)',
+    highlight: 'JUEVES A LUNES · 08:00 AM A 07:30 PM',
     note: '*Martes y Miércoles cerrado. Todos nuestros desayunos, bolones y tigrillos incluyen café recién pasado.',
     ctaText: 'RESERVAR UNA MESA',
     ctaHref: '#reservas',
@@ -1192,7 +1192,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const count = document.getElementById('guestCount').value;
       const date = document.getElementById('resDate').value;
       const time = document.getElementById('resTime').value;
-      const zone = document.getElementById('resZone').value;
       const notes = document.getElementById('resNotes').value.trim();
 
       const lines = [
@@ -1202,8 +1201,7 @@ document.addEventListener('DOMContentLoaded', () => {
         `• *Teléfono:* ${phone}`,
         `• *Personas:* ${count}`,
         `• *Fecha:* ${date}`,
-        `• *Horario:* ${time}`,
-        `• *Ambiente:* ${zone}`
+        `• *Horario:* ${time}`
       ];
 
       if (notes) {
@@ -1218,8 +1216,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Live Opening Hours Status & Today Row Highlight (Tonsupa / America/Guayaquil)
   const updateLiveHoursStatus = () => {
     const schedule = {
-      0: { open: 8.5, close: 19.5, label: '8:30 AM – 7:30 PM' }, // Domingo
-      1: { open: 9.0, close: 19.5, label: '9:00 AM – 7:30 PM' }, // Lunes
+      0: { open: 8.0, close: 19.5, label: '8:00 AM – 7:30 PM' }, // Domingo
+      1: { open: 8.0, close: 19.5, label: '8:00 AM – 7:30 PM' }, // Lunes
       2: null, // Martes (Cerrado)
       3: null, // Miércoles (Cerrado)
       4: { open: 8.0, close: 19.5, label: '8:00 AM – 7:30 PM' }, // Jueves

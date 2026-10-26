@@ -21,9 +21,7 @@
 ## 4. Sincronización de Datos Oficiales (Horarios y Contacto)
 Cualquier cambio en horarios o contacto debe mantenerse sincronizado simultáneamente en `index.html` (`#horarios`, `#reservas`, `#ubicacion`) y en `app.js` (`HERO_SLIDES`, `WHATSAPP_NUMBER`):
 - **Horarios oficiales**:
-  - **Jueves a Sábado**: `8:00 AM – 7:30 PM`
-  - **Domingo**: `8:30 AM – 7:30 PM`
-  - **Lunes**: `9:00 AM – 7:30 PM`
+  - **Jueves a Lunes**: `8:00 AM – 7:30 PM` (siempre abre a las `8:00 AM`).
   - **Martes y Miércoles**: `Cerrado` (nunca usar la frase *"todos los días"*).
 - **WhatsApp**: `0999002427` (`593999002427` en enlaces `wa.me`).
 - **Redes y Mapa**:

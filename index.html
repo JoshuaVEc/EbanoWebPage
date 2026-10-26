@@ -275,7 +275,7 @@
                   <span class="hours-row__today-badge" hidden>HOY</span>
                 </span>
                 <span class="hours-row__line" aria-hidden="true"></span>
-                <span class="hours-row__time">8:30 AM – 7:30 PM</span>
+                <span class="hours-row__time">8:00 AM – 7:30 PM</span>
               </li>
 
               <li class="hours-row" data-day="1">
@@ -284,7 +284,7 @@
                   <span class="hours-row__today-badge" hidden>HOY</span>
                 </span>
                 <span class="hours-row__line" aria-hidden="true"></span>
-                <span class="hours-row__time">9:00 AM – 7:30 PM</span>
+                <span class="hours-row__time">8:00 AM – 7:30 PM</span>
               </li>
 
               <li class="hours-row hours-row--closed" data-day="2">
@@ -378,7 +378,7 @@
           <span class="kicker">RESERVACIONES</span>
           <h2 id="reservasTitle" class="section-title">Reserva tu Mesa</h2>
           <p class="reservations__sub">
-            Jueves a Sábado (8:00 AM – 7:30 PM) · Domingo (8:30 AM – 7:30 PM) · Lunes (9:00 AM – 7:30 PM).
+            Jueves a Lunes: 8:00 AM – 7:30 PM (Martes y Miércoles cerrado).
           </p>
         </div>
 
@@ -454,29 +454,36 @@
 
             <div class="field">
               <label for="resTime">Horario</label>
-              <span id="time-hint" class="hint">Momento del día</span>
+              <span id="time-hint" class="hint">Cada 30 min (8:00 AM – 7:30 PM)</span>
               <select id="resTime" name="resTime" required aria-describedby="time-hint" aria-errormessage="time-error">
                 <option value="">Seleccionar...</option>
-                <option value="08:30 AM (Desayuno)">08:30 AM · Desayuno</option>
-                <option value="10:00 AM (Brunch)">10:00 AM · Brunch</option>
-                <option value="12:30 PM (Almuerzo)">12:30 PM · Almuerzo</option>
-                <option value="02:00 PM (Almuerzo)">02:00 PM · Almuerzo</option>
-                <option value="04:30 PM (Tarde & Mariscos)">04:30 PM · Tarde &amp; Mariscos</option>
-                <option value="06:00 PM (Atardecer & Coctelería)">06:00 PM · Atardecer &amp; Coctelería</option>
-                <option value="07:00 PM (Cena & Cocteles)">07:00 PM · Cena &amp; Cocteles</option>
+                <option value="8:00 AM">8:00 AM</option>
+                <option value="8:30 AM">8:30 AM</option>
+                <option value="9:00 AM">9:00 AM</option>
+                <option value="9:30 AM">9:30 AM</option>
+                <option value="10:00 AM">10:00 AM</option>
+                <option value="10:30 AM">10:30 AM</option>
+                <option value="11:00 AM">11:00 AM</option>
+                <option value="11:30 AM">11:30 AM</option>
+                <option value="12:00 PM">12:00 PM</option>
+                <option value="12:30 PM">12:30 PM</option>
+                <option value="1:00 PM">1:00 PM</option>
+                <option value="1:30 PM">1:30 PM</option>
+                <option value="2:00 PM">2:00 PM</option>
+                <option value="2:30 PM">2:30 PM</option>
+                <option value="3:00 PM">3:00 PM</option>
+                <option value="3:30 PM">3:30 PM</option>
+                <option value="4:00 PM">4:00 PM</option>
+                <option value="4:30 PM">4:30 PM</option>
+                <option value="5:00 PM">5:00 PM</option>
+                <option value="5:30 PM">5:30 PM</option>
+                <option value="6:00 PM">6:00 PM</option>
+                <option value="6:30 PM">6:30 PM</option>
+                <option value="7:00 PM">7:00 PM</option>
+                <option value="7:30 PM">7:30 PM</option>
               </select>
               <div id="time-error" class="error-msg">Selecciona un horario.</div>
             </div>
-          </div>
-
-          <div class="field">
-            <label for="resZone">Ambiente preferido</label>
-            <span id="zone-hint" class="hint">Salón, terraza o barra</span>
-            <select id="resZone" name="resZone" aria-describedby="zone-hint">
-              <option value="Salón Principal">Salón Principal</option>
-              <option value="Zona Bar & Coctelería">Zona Bar &amp; Coctelería</option>
-              <option value="Terraza">Terraza</option>
-            </select>
           </div>
 
           <div class="field">
