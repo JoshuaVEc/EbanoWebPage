@@ -613,69 +613,6 @@ const MENU_CATEGORIES = [
 /* ==========================================================================
    MODERN WEB GUIDANCE UTILITIES & FALLBACKS
    ========================================================================== */
-let supportsDisplayTransition;
-function canTransitionDisplay() {
-  if (supportsDisplayTransition !== undefined) return supportsDisplayTransition;
-  if (!window.CSS?.supports?.('transition-behavior', 'allow-discrete') || !document.body) {
-    return false;
-  }
-  const probe = document.createElement('div');
-  probe.style.cssText = 'transition: display 1s allow-discrete !important; display: block;';
-  document.body.appendChild(probe);
-  getComputedStyle(probe).display;
-  probe.style.display = 'none';
-  supportsDisplayTransition = getComputedStyle(probe).display === 'block';
-  probe.remove();
-  return supportsDisplayTransition;
-}
-
-function supportsTopLayerExit() {
-  return window.CSS?.supports?.('overlay', 'auto') && canTransitionDisplay();
-}
-
-async function closeTopLayer(dialogEl) {
-  if (!dialogEl || !dialogEl.open) return;
-
-  if (!supportsTopLayerExit()) {
-    dialogEl.setAttribute('data-closing', '');
-    const animations = dialogEl.getAnimations({ subtree: true });
-    if (animations.length > 0) {
-      await Promise.race([
-        Promise.allSettled(animations.map((a) => a.finished)),
-        new Promise((r) => setTimeout(r, 2000)),
-      ]);
-    }
-    if (!dialogEl.hasAttribute('data-closing')) return;
-    dialogEl.removeAttribute('data-closing');
-  }
-
-  dialogEl.close();
-}
-
-function setupModernDialog(dialog) {
-  if (!dialog) return;
-
-  dialog.addEventListener('cancel', (event) => {
-    event.preventDefault();
-    closeTopLayer(dialog);
-  });
-
-  if (!('closedBy' in HTMLDialogElement.prototype)) {
-    dialog.addEventListener('click', (event) => {
-      if (event.target !== dialog) return;
-      const rect = dialog.getBoundingClientRect();
-      const isDialogContent = (
-        rect.top <= event.clientY &&
-        event.clientY <= rect.top + rect.height &&
-        rect.left <= event.clientX &&
-        event.clientX <= rect.left + rect.width
-      );
-      if (isDialogContent) return;
-      closeTopLayer(dialog);
-    });
-  }
-}
-
 const UserInvalidFallback = (() => {
   const dirtyState = new WeakMap();
 
@@ -748,14 +685,6 @@ let currentSlideIndex = 0;
 let activeMoment = 'all';
 let activeCategoryId = 'all';
 let searchQuery = '';
-
-function findItemById(itemId) {
-  for (const cat of MENU_CATEGORIES) {
-    const found = cat.items.find((i) => i.id === itemId);
-    if (found) return { item: found, category: cat };
-  }
-  return null;
-}
 
 function formatPrice(value) {
   return `$${value.toFixed(2)}`;
@@ -841,7 +770,7 @@ function renderFeaturedShowcase() {
   grid.innerHTML = featuredList
     .map(
       ({ item, categoryTitle }) => `
-      <article class="featured-card" data-open-dish="${item.id}" tabindex="0" role="button" aria-label="Ver detalles de ${item.name}">
+      <article class="featured-card">
         <div class="featured-card__img-wrap">
           <img
             src="${item.image}"
@@ -952,7 +881,7 @@ function renderMenu() {
               (item) => `
                 <article class="menu-item-card">
                   <div class="menu-item-card__info">
-                    <h4 class="menu-item-card__name" data-open-dish="${item.id}">
+                    <h4 class="menu-item-card__name">
                       ${item.name}
                     </h4>
                     <p class="menu-item-card__desc">${item.desc}</p>
@@ -979,51 +908,6 @@ function updateMomentTabsUI() {
     btn.classList.toggle('is-active', isMatch);
     btn.setAttribute('aria-selected', isMatch ? 'true' : 'false');
   });
-}
-
-/* ==========================================================================
-   DISH DETAIL MODAL
-   ========================================================================== */
-function openDishModal(itemId) {
-  const found = findItemById(itemId);
-  if (!found) return;
-  const { item, category } = found;
-
-  const dialog = document.getElementById('dishDialog');
-  const body = document.getElementById('dishDialogBody');
-  if (!dialog || !body) return;
-
-  body.innerHTML = `
-    ${
-      item.image
-        ? `<img src="${item.image}" alt="${item.name}" class="dialog-dish-img" style="object-position: ${item.imgPosition || 'center'};" loading="lazy" width="540" height="300">`
-        : ''
-    }
-    <span class="kicker">${category.title}</span>
-    <div class="dialog-dish-meta">
-      <h3 id="dialogDishTitle" class="modal__title">${item.name}</h3>
-      <span class="dialog-dish-price">${formatPrice(item.price)}</span>
-    </div>
-    <p class="modal__subtitle">${item.desc}</p>
-    <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1.5rem;">
-      <a href="#reservas" class="btn btn--sand" id="modalReserveBtn">
-        RESERVAR UNA MESA
-      </a>
-      <button type="button" class="btn btn--ghost" id="modalCloseBtn">
-        CERRAR
-      </button>
-    </div>
-  `;
-
-  document.getElementById('modalReserveBtn')?.addEventListener('click', () => {
-    closeTopLayer(dialog);
-  });
-
-  document.getElementById('modalCloseBtn')?.addEventListener('click', () => {
-    closeTopLayer(dialog);
-  });
-
-  dialog.showModal();
 }
 
 /* ==========================================================================
@@ -1076,16 +960,6 @@ document.addEventListener('DOMContentLoaded', () => {
   renderCategoryPills();
   renderMenu();
 
-  const dishDialog = document.getElementById('dishDialog');
-  setupModernDialog(dishDialog);
-
-  document.querySelectorAll('[data-close-dialog]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const targetId = btn.getAttribute('data-close-dialog');
-      closeTopLayer(document.getElementById(targetId));
-    });
-  });
-
   document.querySelectorAll('.moment-tab').forEach((tab) => {
     tab.addEventListener('click', () => {
       activeMoment = tab.getAttribute('data-moment') || 'all';
@@ -1126,12 +1000,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   document.addEventListener('click', (e) => {
-    const openDishTrigger = e.target.closest('[data-open-dish]');
-    if (openDishTrigger) {
-      openDishModal(openDishTrigger.getAttribute('data-open-dish'));
-      return;
-    }
-
     const jumpTrigger = e.target.closest('[data-jump-category]');
     if (jumpTrigger) {
       const targetCat = jumpTrigger.getAttribute('data-jump-category');
