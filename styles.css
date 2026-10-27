@@ -650,27 +650,28 @@ button {
 }
 
 /* ==========================================================================
-   PROMOCIONES & EVENTOS ESPECIALES (Joined Poster Strip · 7s Auto-Slide)
+   PROMOCIONES & EVENTOS ESPECIALES (Full-Bleed Edge-to-Edge · Zero Blur · 7s)
    ========================================================================== */
 .promos-section {
-  background:
-    radial-gradient(circle at 82% 22%, rgba(255, 101, 0, 0.12) 0%, transparent 50%),
-    radial-gradient(circle at 18% 76%, rgba(30, 62, 98, 0.55) 0%, transparent 55%),
-    linear-gradient(180deg var(--in-oklch), #000000 0%, #0B192C 50%, #1E3E62 100%);
-}
-
-.promos-section__header {
-  margin-bottom: 2.5rem;
+  position: relative;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background: #000000;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  overflow: hidden;
 }
 
 .promo-slider {
-  --promo-slide-w: clamp(300px, 42vw, 520px);
+  --promo-slide-w: clamp(280px, 50vw, 600px);
   position: relative;
   width: 100%;
-  max-width: 1280px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  display: block;
 }
 
 .promo-slider__viewport {
@@ -678,7 +679,7 @@ button {
   overflow: hidden;
   border-radius: 0;
   border: none;
-  background: transparent;
+  background: #000000;
   box-shadow: none;
   touch-action: pan-y pinch-zoom;
   user-select: none;
@@ -696,18 +697,16 @@ button {
   align-items: stretch;
   gap: 0;
   width: 100%;
-  will-change: transform;
   transform: translate3d(
     calc(50% - (var(--promo-slide-w) * (var(--track-index) + 0.5)) + var(--drag-x)),
     0,
     0
   );
-  transition: transform 0.68s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .promo-slider__track.is-instant,
-.promo-slider__track.is-instant .promo-slide__img,
-.promo-slider__track.is-instant .promo-slide::after {
+.promo-slider__track.is-instant .promo-slide__img {
   transition: none !important;
 }
 
@@ -732,32 +731,12 @@ button {
   object-fit: cover;
   display: block;
   pointer-events: none;
-  will-change: filter, transform;
-  filter: blur(18px) brightness(0.42) saturate(0.72) contrast(0.95);
-  transform: scale(1.08);
-  transition:
-    filter 0.68s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.68s cubic-bezier(0.22, 1, 0.36, 1);
+  opacity: 0.32;
+  transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .promo-slide.is-active .promo-slide__img {
-  filter: blur(0px) brightness(1) saturate(1) contrast(1);
-  transform: scale(1);
-}
-
-.promo-slide::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: rgba(11, 25, 44, 0.38);
-  backdrop-filter: blur(6px);
   opacity: 1;
-  transition: opacity 0.68s cubic-bezier(0.22, 1, 0.36, 1);
-  pointer-events: none;
-}
-
-.promo-slide.is-active::after {
-  opacity: 0;
 }
 
 .promo-slider__arrow {
@@ -786,25 +765,29 @@ button {
 }
 
 .promo-slider__arrow--prev {
-  left: 1rem;
+  left: 1.25rem;
 }
 
 .promo-slider__arrow--next {
-  right: 1rem;
+  right: 1.25rem;
 }
 
 .promo-slider__dots {
+  position: absolute;
+  bottom: 1.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
   display: flex;
   justify-content: center;
   gap: 0.6rem;
-  margin-top: 1.5rem;
 }
 
 .promo-slider__dot {
   width: 36px;
   height: 4px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.32);
   transition: background-color 0.25s ease, width 0.25s ease;
 }
 
@@ -1757,94 +1740,40 @@ button {
 }
 
 /* ==========================================================================
-   DYNAMIC SCROLL-DRIVEN SECTION TRANSITIONS
-   Suavizado reducido al 50% y elevación pronunciada entre cada rectángulo
+   SECTION STACKING & PERFORMANCE OPTIMIZATION
    ========================================================================== */
 .hero {
   position: relative;
   z-index: 1;
-  padding-bottom: 8.5rem;
-  transform-origin: center top;
-  will-change: transform, filter;
-}
-
-.promos-section,
-.featured,
-.menu-section,
-.hours-section,
-.reservations,
-.map-section {
-  position: relative;
-  margin-top: -5.5rem;
-  /* 50% menos suavizado en bordes y sombra */
-  border-radius: 14px 14px 0 0;
-  box-shadow: 0 -12px 26px rgba(0, 0, 0, 0.45);
-  border-top: 1px solid rgba(255, 255, 255, 0.07);
-  transform-origin: center top;
-  will-change: transform, opacity;
-  transition: transform 0.08s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.promos-section > .container,
-.featured > .container,
-.menu-section > .container,
-.hours-section > .container,
-.reservations > .container,
-.map-section > .container {
-  will-change: transform, opacity;
-  transition: transform 0.1s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.1s linear;
-}
-
-.featured-card,
-.menu-category-block {
-  will-change: transform, opacity;
-  transition: transform 0.12s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.12s linear;
 }
 
 .promos-section {
+  position: relative;
   z-index: 2;
-  padding-bottom: 9rem;
+  padding: 0;
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
 }
 
-.featured {
-  z-index: 3;
-  padding-bottom: 9rem;
-}
-
-.menu-section {
-  z-index: 4;
-  padding-bottom: 5.5rem;
-}
-
-.bar-banner {
-  position: relative;
-  z-index: 5;
-  padding: 5.5rem 0;
-}
-
-.komein-banner {
-  position: relative;
-  z-index: 6;
-  padding: 5.5rem 0 9rem;
-}
-
-.hours-section {
-  z-index: 7;
-  padding-bottom: 9rem;
-}
-
-.map-section {
-  z-index: 8;
-  padding-bottom: 9rem;
-}
-
-.reservations {
-  z-index: 9;
-  padding-bottom: 6.5rem;
-}
-
+.featured,
+.menu-section,
+.bar-banner,
+.komein-banner,
+.hours-section,
+.map-section,
+.reservations,
 .footer {
-  z-index: 10;
+  position: relative;
+}
+
+.menu-section,
+.hours-section,
+.map-section,
+.reservations {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 700px;
 }
 
 /* ==========================================================================

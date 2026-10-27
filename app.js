@@ -832,6 +832,7 @@ function buildPromoSlideHTML(promo, isClone = false) {
         alt="${isClone ? '' : promo.alt}"
         class="promo-slide__img"
         loading="lazy"
+        decoding="async"
         width="682"
         height="1024"
       >
@@ -1167,8 +1168,6 @@ function renderMenu() {
     `
     )
     .join('');
-
-  window.dispatchEvent(new Event('scroll'));
 }
 
 function updateMomentTabsUI() {
@@ -1381,85 +1380,4 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   updateLiveHoursStatus();
-
-  // Dynamic Scroll-Driven Section & Block Rise Engine
-  // Cada vez que bajas, el siguiente rectángulo sube visiblemente sobre el anterior
-  const allRectangles = Array.from(
-    document.querySelectorAll(
-      '.hero, .promos-section, .featured, .menu-section, .hours-section, .reservations, .map-section'
-    )
-  );
-
-  let rafPending = false;
-
-  const updateScrollAnimations = () => {
-    rafPending = false;
-    const vh = window.innerHeight || 800;
-
-    allRectangles.forEach((sec, idx) => {
-      if (idx === 0) return; // Hero is the base layer
-
-      const rect = sec.getBoundingClientRect();
-      // Progress from 0 (when section top edge is at 105% of viewport height)
-      // to 1 (when section top edge reaches 28% from top of viewport)
-      const startY = vh * 1.05;
-      const endY = vh * 0.28;
-      const raw = (startY - rect.top) / (startY - endY);
-      const progress = Math.max(0, Math.min(1, raw));
-
-      // Incoming rectangle slides up 165px as you scroll down
-      const slideUpPx = (1 - progress) * 165;
-      sec.style.transform = `translate3d(0, ${slideUpPx.toFixed(1)}px, 0)`;
-
-      // Inner content rises with extra depth and fade/scale
-      const inner = sec.querySelector(':scope > .container');
-      if (inner) {
-        const innerY = (1 - progress) * 85;
-        const scale = 0.94 + 0.06 * progress;
-        const opacity = 0.12 + 0.88 * progress;
-        inner.style.transform = `translate3d(0, ${innerY.toFixed(1)}px, 0) scale(${scale.toFixed(3)})`;
-        inner.style.opacity = opacity.toFixed(3);
-      }
-
-      // Previous rectangle subtly recedes as the new rectangle rises over its bottom edge
-      const prevSec = allRectangles[idx - 1];
-      if (prevSec && progress > 0 && progress < 1) {
-        const prevContainer = prevSec.querySelector(':scope > .container, :scope > .hero__grid');
-        if (prevContainer) {
-          const pushBackY = -progress * 42;
-          const prevScale = 1 - progress * 0.035;
-          prevContainer.style.transform = `translate3d(0, ${pushBackY.toFixed(1)}px, 0) scale(${prevScale.toFixed(3)})`;
-        }
-      } else if (prevSec && progress === 0) {
-        const prevContainer = prevSec.querySelector(':scope > .container, :scope > .hero__grid');
-        if (prevContainer && idx === 1) {
-          prevContainer.style.transform = 'translate3d(0, 0, 0) scale(1)';
-        }
-      }
-    });
-
-    // Also animate individual cards and category blocks inside tall sections as you scroll down
-    const subBlocks = document.querySelectorAll('.featured-card, .menu-category-block');
-    subBlocks.forEach((block) => {
-      const r = block.getBoundingClientRect();
-      const rawBlock = (vh * 1.02 - r.top) / (vh * 0.62);
-      const p = Math.max(0, Math.min(1, rawBlock));
-      const y = (1 - p) * 70;
-      const s = 0.95 + 0.05 * p;
-      const o = 0.15 + 0.85 * p;
-      block.style.transform = `translate3d(0, ${y.toFixed(1)}px, 0) scale(${s.toFixed(3)})`;
-      block.style.opacity = o.toFixed(3);
-    });
-  };
-
-  const requestScrollUpdate = () => {
-    if (!rafPending) {
-      rafPending = true;
-      window.requestAnimationFrame(updateScrollAnimations);
-    }
-  };
-
-  window.addEventListener('scroll', requestScrollUpdate, { passive: true });
-  window.addEventListener('resize', requestScrollUpdate, { passive: true });
-  updateScrollAnimations();
 });

@@ -112,33 +112,26 @@
       </div>
     </section>
 
-    <!-- PROMOCIONES & EVENTOS ESPECIALES (Infinite Loop Bidirectional Slider) -->
-    <section class="section promos-section" id="promos" aria-labelledby="promosTitle">
-      <div class="container">
-        <div class="section-header promos-section__header">
-          <span class="kicker">CELEBRACIONES FRENTE AL MAR</span>
-          <h2 id="promosTitle" class="section-title">Promociones &amp; Eventos Especiales</h2>
-        </div>
+    <!-- PROMOCIONES & EVENTOS ESPECIALES (Full-Bleed Simple Slider · 7s) -->
+    <section class="promos-section" id="promos" aria-label="Promociones y Eventos Especiales">
+      <div class="promo-slider" id="promoSlider" aria-roledescription="carousel" aria-label="Promociones especiales">
+        <button type="button" class="promo-slider__arrow promo-slider__arrow--prev" id="promoPrevBtn" aria-label="Promoción anterior">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
 
-        <div class="promo-slider" id="promoSlider" aria-roledescription="carousel" aria-label="Promociones especiales">
-          <button type="button" class="promo-slider__arrow promo-slider__arrow--prev" id="promoPrevBtn" aria-label="Promoción anterior">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
-              <polyline points="15 18 9 12 15 6"></polyline>
-            </svg>
-          </button>
-
-          <div class="promo-slider__viewport" id="promoViewport">
-            <div class="promo-slider__track" id="promoTrack">
-              <!-- Populated and cloned for infinite loop by app.js -->
-            </div>
+        <div class="promo-slider__viewport" id="promoViewport">
+          <div class="promo-slider__track" id="promoTrack">
+            <!-- Populated and cloned for infinite loop by app.js -->
           </div>
-
-          <button type="button" class="promo-slider__arrow promo-slider__arrow--next" id="promoNextBtn" aria-label="Siguiente promoción">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
-              <polyline points="9 18 15 12 9 6"></polyline>
-            </svg>
-          </button>
         </div>
+
+        <button type="button" class="promo-slider__arrow promo-slider__arrow--next" id="promoNextBtn" aria-label="Siguiente promoción">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
 
         <div class="promo-slider__dots" id="promoDots" role="tablist" aria-label="Seleccionar promoción">
           <button type="button" class="promo-slider__dot is-active" data-promo-slide="0" aria-label="Navidad Frente al Mar"></button>
