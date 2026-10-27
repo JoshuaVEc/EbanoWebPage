@@ -45,6 +45,52 @@ const HERO_SLIDES = [
 ];
 
 /**
+ * Promociones & Eventos Especiales (Carrusel en Bucle Infinito Bidireccional)
+ */
+const PROMO_SLIDES = [
+  {
+    id: 'promo-navidad',
+    badge: 'TEMPORADA FESTIVA · FRENTE AL MAR',
+    title: 'Ven y Festeja la Navidad Frente al Mar',
+    desc: 'Una Navidad playera frente al mar, en un lugar acogedor, íntimo y sin prisa con nuestro Menú Navideño de Cuatro Tiempos.',
+    perks: [
+      'Copa de Champán',
+      'Regalo de Cortesía',
+      'Piqueos de Bienvenida',
+      'Menú Cuatro Tiempos',
+      'Música en Vivo'
+    ],
+    price: 'USD $65',
+    priceUnit: 'POR PERSONA',
+    groupNote: 'Precios especiales para grupos a partir de 20 personas.',
+    image: 'fotos/promos/promo-navidad.jpg',
+    alt: 'Promoción Navidad Frente al Mar en Ébano Kitchen & Bar',
+    ctaText: 'RESERVAR NAVIDAD POR WHATSAPP',
+    waMessage: 'Hola Ébano Kitchen & Bar, me gustaría reservar para la cena de *Navidad Frente al Mar* (USD 65 por persona).'
+  },
+  {
+    id: 'promo-fin-de-ano',
+    badge: 'NOCHEVIEJA · FRENTE AL MAR',
+    title: 'Cena de Fin de Año Frente al Mar',
+    desc: 'Una noche para brindar por lo vivido y recibir lo que está por venir, en un lugar acogedor, íntimo y sin prisa.',
+    perks: [
+      'Menú Cuatro Tiempos',
+      'Música en Vivo',
+      'Cotillón Temático',
+      'Juegos Pirotécnicos',
+      'Brindis de Medianoche'
+    ],
+    price: 'USD $85',
+    priceUnit: 'POR PERSONA',
+    groupNote: 'Precios especiales para grupos a partir de 20 personas.',
+    image: 'fotos/promos/promo-fin-de-ano.jpg',
+    alt: 'Promoción Cena de Fin de Año Frente al Mar en Ébano Kitchen & Bar',
+    ctaText: 'RESERVAR FIN DE AÑO POR WHATSAPP',
+    waMessage: 'Hola Ébano Kitchen & Bar, me gustaría reservar para la *Cena de Fin de Año Frente al Mar* (USD 85 por persona).'
+  }
+];
+
+/**
  * 15 Categorías Oficiales con todos los platos, bebidas y precios exactos
  */
 const MENU_CATEGORIES = [
@@ -691,10 +737,11 @@ function formatPrice(value) {
 }
 
 /* ==========================================================================
-   HERO SLIDER (Editorial Style + 6s Auto-Advance)
+   HERO SLIDER (Editorial Style + 6s Auto-Advance + Staggered Text Reveal)
    ========================================================================== */
 const HERO_AUTO_INTERVAL_MS = 6000;
 let heroAutoTimer = null;
+let heroSwapTimeout = null;
 
 function restartHeroAutoTimer() {
   if (heroAutoTimer) {
@@ -709,6 +756,7 @@ function setHeroSlide(index) {
   currentSlideIndex = (index + HERO_SLIDES.length) % HERO_SLIDES.length;
   const slide = HERO_SLIDES[currentSlideIndex];
 
+  const heroCopy = document.getElementById('heroCopy') || document.querySelector('.hero__copy');
   const kicker = document.getElementById('heroKicker');
   const title = document.getElementById('heroTitle');
   const highlight = document.getElementById('heroHighlight');
@@ -716,39 +764,267 @@ function setHeroSlide(index) {
   const cta = document.getElementById('heroPrimaryCta');
   const img = document.getElementById('heroSlideImg');
 
-  if (kicker) kicker.textContent = slide.kicker;
-  if (title) {
-    title.innerHTML = `${slide.title} <span class="hero__title-sub" id="heroSubtitle">${slide.subtitle}</span>`;
+  if (heroSwapTimeout) {
+    clearTimeout(heroSwapTimeout);
+    heroSwapTimeout = null;
   }
-  if (highlight) highlight.textContent = slide.highlight;
-  if (note) note.textContent = slide.note;
-  if (cta) {
-    cta.textContent = slide.ctaText;
-    cta.setAttribute('href', slide.ctaHref);
+
+  if (heroCopy) {
+    heroCopy.classList.remove('is-entering');
+    heroCopy.classList.add('is-exiting');
   }
+
   if (img) {
     img.classList.remove('is-animating');
     img.style.opacity = '0.28';
-    setTimeout(() => {
+  }
+
+  heroSwapTimeout = setTimeout(() => {
+    if (kicker) kicker.textContent = slide.kicker;
+    if (title) {
+      title.innerHTML = `${slide.title} <span class="hero__title-sub" id="heroSubtitle">${slide.subtitle}</span>`;
+    }
+    if (highlight) highlight.textContent = slide.highlight;
+    if (note) note.textContent = slide.note;
+    if (cta) {
+      cta.textContent = slide.ctaText;
+      cta.setAttribute('href', slide.ctaHref);
+    }
+
+    if (heroCopy) {
+      heroCopy.classList.remove('is-exiting');
+      void heroCopy.offsetWidth;
+      heroCopy.classList.add('is-entering');
+    }
+
+    if (img) {
       img.src = slide.image;
       img.alt = slide.alt;
       img.style.opacity = '1';
       requestAnimationFrame(() => {
         img.classList.add('is-animating');
       });
-    }, 180);
-  }
+    }
+  }, 170);
 
   document.querySelectorAll('.hero__dot').forEach((dot, idx) => {
     dot.classList.remove('is-active');
     if (idx === currentSlideIndex) {
-      // Force reflow so the 10s progress bar restarts cleanly
+      // Force reflow so the 6s progress bar restarts cleanly
       void dot.offsetWidth;
       dot.classList.add('is-active');
     }
   });
 
   restartHeroAutoTimer();
+}
+
+/* ==========================================================================
+   INFINITE BIDIRECTIONAL PROMO SLIDER
+   ========================================================================== */
+const PROMO_AUTO_INTERVAL_MS = 5500;
+
+function buildPromoSlideHTML(promo, isClone = false) {
+  const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(promo.waMessage)}`;
+  const perksHtml = promo.perks
+    .map((p) => `<li class="promo-card__perk">${p}</li>`)
+    .join('');
+
+  return `
+    <div class="promo-slide" ${isClone ? 'aria-hidden="true"' : ''}>
+      <article class="promo-card">
+        <div class="promo-card__poster-wrap">
+          <img
+            src="${promo.image}"
+            alt="${isClone ? '' : promo.alt}"
+            class="promo-card__poster"
+            loading="lazy"
+            width="682"
+            height="1024"
+          >
+        </div>
+        <div class="promo-card__info">
+          <span class="promo-card__badge">${promo.badge}</span>
+          <h3 class="promo-card__title">${promo.title}</h3>
+          <p class="promo-card__desc">${promo.desc}</p>
+          <ul class="promo-card__perks">${perksHtml}</ul>
+          <div class="promo-card__pricing">
+            <span class="promo-card__price">${promo.price}<small>${promo.priceUnit}</small></span>
+            <span class="promo-card__group-note">★ ${promo.groupNote}</span>
+          </div>
+          <a href="${waUrl}" target="_blank" rel="noopener noreferrer" class="btn btn--sand" ${isClone ? 'tabindex="-1"' : ''}>
+            ${promo.ctaText}
+          </a>
+        </div>
+      </article>
+    </div>
+  `;
+}
+
+function initPromoSlider() {
+  const track = document.getElementById('promoTrack');
+  const viewport = document.getElementById('promoViewport');
+  const prevBtn = document.getElementById('promoPrevBtn');
+  const nextBtn = document.getElementById('promoNextBtn');
+  const dots = document.querySelectorAll('.promo-slider__dot');
+  if (!track || !viewport || PROMO_SLIDES.length === 0) return;
+
+  const total = PROMO_SLIDES.length;
+  // Track layout: [clone(last), slide(0), slide(1), ..., clone(0)]
+  const firstClone = buildPromoSlideHTML(PROMO_SLIDES[0], true);
+  const lastClone = buildPromoSlideHTML(PROMO_SLIDES[total - 1], true);
+  const realSlides = PROMO_SLIDES.map((p) => buildPromoSlideHTML(p, false)).join('');
+
+  track.innerHTML = lastClone + realSlides + firstClone;
+
+  let trackIndex = 1; // Starts at first real slide
+  let isTransitioning = false;
+  let autoTimer = null;
+
+  const updateDots = () => {
+    const realIdx = ((trackIndex - 1) % total + total) % total;
+    dots.forEach((dot, idx) => {
+      dot.classList.toggle('is-active', idx === realIdx);
+    });
+  };
+
+  const setPosition = (instant = false) => {
+    if (instant) {
+      track.classList.add('is-instant');
+    } else {
+      track.classList.remove('is-instant');
+    }
+    track.style.transform = `translate3d(-${trackIndex * 100}%, 0, 0)`;
+    if (instant) {
+      // Force reflow so subsequent transitions animate cleanly
+      void track.offsetWidth;
+      track.classList.remove('is-instant');
+    }
+    updateDots();
+  };
+
+  const snapIfClone = () => {
+    if (trackIndex <= 0) {
+      trackIndex = total;
+      setPosition(true);
+    } else if (trackIndex > total) {
+      trackIndex = 1;
+      setPosition(true);
+    }
+  };
+
+  const moveNext = () => {
+    if (isTransitioning) {
+      snapIfClone();
+    }
+    isTransitioning = true;
+    trackIndex += 1;
+    setPosition(false);
+  };
+
+  const movePrev = () => {
+    if (isTransitioning) {
+      snapIfClone();
+    }
+    isTransitioning = true;
+    trackIndex -= 1;
+    setPosition(false);
+  };
+
+  const restartAuto = () => {
+    if (autoTimer) clearInterval(autoTimer);
+    autoTimer = setInterval(() => {
+      moveNext();
+    }, PROMO_AUTO_INTERVAL_MS);
+  };
+
+  track.addEventListener('transitionend', (e) => {
+    if (e.target !== track) return;
+    isTransitioning = false;
+    snapIfClone();
+  });
+
+  prevBtn?.addEventListener('click', () => {
+    movePrev();
+    restartAuto();
+  });
+
+  nextBtn?.addEventListener('click', () => {
+    moveNext();
+    restartAuto();
+  });
+
+  dots.forEach((dot) => {
+    dot.addEventListener('click', () => {
+      const targetIdx = parseInt(dot.getAttribute('data-promo-slide') || '0', 10);
+      if (isTransitioning) snapIfClone();
+      isTransitioning = true;
+      trackIndex = targetIdx + 1;
+      setPosition(false);
+      restartAuto();
+    });
+  });
+
+  // Pointer / Touch Drag Support (Swipe left or right)
+  let startX = 0;
+  let deltaX = 0;
+  let isDragging = false;
+
+  viewport.addEventListener('pointerdown', (e) => {
+    if (e.target.closest('a, button')) return;
+    if (isTransitioning) {
+      isTransitioning = false;
+      snapIfClone();
+    }
+    isDragging = true;
+    startX = e.clientX;
+    deltaX = 0;
+    track.classList.add('is-instant');
+    if (autoTimer) clearInterval(autoTimer);
+    viewport.setPointerCapture?.(e.pointerId);
+  });
+
+  viewport.addEventListener('pointermove', (e) => {
+    if (!isDragging) return;
+    deltaX = e.clientX - startX;
+    const width = viewport.clientWidth || 1;
+    const offsetPct = -(trackIndex * 100) + (deltaX / width) * 100;
+    track.style.transform = `translate3d(${offsetPct}%, 0, 0)`;
+  });
+
+  const endDrag = () => {
+    if (!isDragging) return;
+    isDragging = false;
+    track.classList.remove('is-instant');
+    const width = viewport.clientWidth || 1;
+    const threshold = Math.min(70, width * 0.14);
+
+    if (deltaX < -threshold) {
+      moveNext();
+    } else if (deltaX > threshold) {
+      movePrev();
+    } else {
+      isTransitioning = true;
+      setPosition(false);
+    }
+    restartAuto();
+  };
+
+  viewport.addEventListener('pointerup', endDrag);
+  viewport.addEventListener('pointercancel', endDrag);
+
+  // Pause auto-slide on hover
+  const sliderEl = document.getElementById('promoSlider');
+  sliderEl?.addEventListener('mouseenter', () => {
+    if (autoTimer) clearInterval(autoTimer);
+  });
+  sliderEl?.addEventListener('mouseleave', () => {
+    if (!isDragging) restartAuto();
+  });
+
+  // Initialize starting position and start infinite auto-loop
+  setPosition(true);
+  restartAuto();
 }
 
 /* ==========================================================================
@@ -956,6 +1232,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  initPromoSlider();
   renderFeaturedShowcase();
   renderCategoryPills();
   renderMenu();
@@ -1116,7 +1393,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Cada vez que bajas, el siguiente rectángulo sube visiblemente sobre el anterior
   const allRectangles = Array.from(
     document.querySelectorAll(
-      '.hero, .featured, .menu-section, .hours-section, .reservations, .map-section'
+      '.hero, .promos-section, .featured, .menu-section, .hours-section, .reservations, .map-section'
     )
   );
 
