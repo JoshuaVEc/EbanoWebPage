@@ -742,11 +742,19 @@ function formatPrice(value) {
 const HERO_AUTO_INTERVAL_MS = 6000;
 let heroAutoTimer = null;
 let heroSwapTimeout = null;
+let heroIsVisible = true;
+let heroIsPausedByUser = false;
 
-function restartHeroAutoTimer() {
+function stopHeroAutoTimer() {
   if (heroAutoTimer) {
     clearInterval(heroAutoTimer);
+    heroAutoTimer = null;
   }
+}
+
+function restartHeroAutoTimer() {
+  stopHeroAutoTimer();
+  if (!heroIsVisible || heroIsPausedByUser || document.hidden) return;
   heroAutoTimer = setInterval(() => {
     setHeroSlide(currentSlideIndex + 1);
   }, HERO_AUTO_INTERVAL_MS);
@@ -808,8 +816,10 @@ function setHeroSlide(index) {
   }, 170);
 
   document.querySelectorAll('.hero__dot').forEach((dot, idx) => {
+    const isActive = idx === currentSlideIndex;
     dot.classList.remove('is-active');
-    if (idx === currentSlideIndex) {
+    dot.setAttribute('aria-current', isActive ? 'true' : 'false');
+    if (isActive) {
       // Force reflow so the 6s progress bar restarts cleanly
       void dot.offsetWidth;
       dot.classList.add('is-active');
@@ -860,11 +870,15 @@ function initPromoSlider() {
   let trackIndex = total; // Starts at first real slide (index 2)
   let isTransitioning = false;
   let autoTimer = null;
+  let promoIsVisible = true;
+  let promoIsHovered = false;
 
   const updateActiveStates = () => {
     const realIdx = ((trackIndex - total) % total + total) % total;
     dots.forEach((dot, idx) => {
-      dot.classList.toggle('is-active', idx === realIdx);
+      const isMatch = idx === realIdx;
+      dot.classList.toggle('is-active', isMatch);
+      dot.setAttribute('aria-current', isMatch ? 'true' : 'false');
     });
     slideEls.forEach((slideEl, idx) => {
       slideEl.classList.toggle('is-active', idx === trackIndex);
@@ -881,7 +895,7 @@ function initPromoSlider() {
     track.style.setProperty('--drag-x', '0px');
     updateActiveStates();
     if (instant) {
-      // Force reflow so subsequent transitions and filters animate cleanly
+      // Force reflow so subsequent transitions animate cleanly
       void track.offsetWidth;
       track.classList.remove('is-instant');
     }
@@ -915,8 +929,16 @@ function initPromoSlider() {
     setPosition(false);
   };
 
+  const stopAuto = () => {
+    if (autoTimer) {
+      clearInterval(autoTimer);
+      autoTimer = null;
+    }
+  };
+
   const restartAuto = () => {
-    if (autoTimer) clearInterval(autoTimer);
+    stopAuto();
+    if (!promoIsVisible || promoIsHovered || document.hidden) return;
     autoTimer = setInterval(() => {
       moveNext();
     }, PROMO_AUTO_INTERVAL_MS);
@@ -951,7 +973,7 @@ function initPromoSlider() {
     });
   });
 
-  // Pointer / Touch Drag Support (Swipe left or right, or tap neighboring censored slide)
+  // Pointer / Touch Drag Support (Swipe left or right, or tap neighboring slide)
   let startX = 0;
   let deltaX = 0;
   let isDragging = false;
@@ -969,7 +991,7 @@ function initPromoSlider() {
     startX = e.clientX;
     deltaX = 0;
     track.classList.add('is-instant');
-    if (autoTimer) clearInterval(autoTimer);
+    stopAuto();
     viewport.setPointerCapture?.(e.pointerId);
   });
 
@@ -1007,13 +1029,32 @@ function initPromoSlider() {
   viewport.addEventListener('pointerup', endDrag);
   viewport.addEventListener('pointercancel', endDrag);
 
-  // Pause auto-slide on hover
+  // Pause auto-slide on hover / focus and when offscreen
   const sliderEl = document.getElementById('promoSlider');
   sliderEl?.addEventListener('mouseenter', () => {
-    if (autoTimer) clearInterval(autoTimer);
+    promoIsHovered = true;
+    stopAuto();
   });
   sliderEl?.addEventListener('mouseleave', () => {
+    promoIsHovered = false;
     if (!isDragging) restartAuto();
+  });
+
+  if ('IntersectionObserver' in window && sliderEl) {
+    const promoObserver = new IntersectionObserver(
+      (entries) => {
+        promoIsVisible = entries[0]?.isIntersecting ?? true;
+        if (promoIsVisible) restartAuto();
+        else stopAuto();
+      },
+      { threshold: 0.05 }
+    );
+    promoObserver.observe(sliderEl);
+  }
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) stopAuto();
+    else restartAuto();
   });
 
   // Initialize starting position and start 7s infinite auto-loop
@@ -1048,6 +1089,7 @@ function renderFeaturedShowcase() {
             class="featured-card__img"
             style="object-position: ${item.imgPosition || 'center'};"
             loading="lazy"
+            decoding="async"
             width="640"
             height="420"
           >
@@ -1117,12 +1159,15 @@ function renderMenu() {
   if (filteredCategories.length === 0) {
     container.innerHTML = `
       <div class="empty-menu-state">
-        <p>No encontramos resultados para "${searchQuery}".</p>
+        <p>No encontramos resultados para "<span id="emptySearchQuery"></span>".</p>
         <button type="button" class="btn btn--ghost" id="resetMenuFiltersBtn" style="margin-top: 1rem;">
           VER TODA LA CARTA
         </button>
       </div>
     `;
+    const querySpan = document.getElementById('emptySearchQuery');
+    if (querySpan) querySpan.textContent = searchQuery;
+
     document.getElementById('resetMenuFiltersBtn')?.addEventListener('click', () => {
       activeMoment = 'all';
       activeCategoryId = 'all';
@@ -1187,22 +1232,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const dateInput = document.getElementById('resDate');
   if (dateInput) {
-    const today = new Date().toISOString().split('T')[0];
+    // Format YYYY-MM-DD in Ecuador's local timezone (America/Guayaquil)
+    const today = new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'America/Guayaquil'
+    }).format(new Date());
     dateInput.min = today;
     dateInput.value = today;
   }
 
   // Header scroll background transition
   const headerEl = document.getElementById('header');
+  let isScrolledState = false;
   window.addEventListener(
     'scroll',
     () => {
-      headerEl?.classList.toggle('is-scrolled', window.scrollY > 40);
+      const shouldBeScrolled = window.scrollY > 40;
+      if (shouldBeScrolled !== isScrolledState) {
+        isScrolledState = shouldBeScrolled;
+        headerEl?.classList.toggle('is-scrolled', shouldBeScrolled);
+      }
     },
     { passive: true }
   );
 
-  // Hero slider controls + 10s automatic progression
+  // Hero slider controls + 6s automatic progression + offscreen/tab pause
   const initialHeroImg = document.getElementById('heroSlideImg');
   if (initialHeroImg) {
     requestAnimationFrame(() => {
@@ -1210,6 +1263,38 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
   restartHeroAutoTimer();
+
+  const heroSection = document.querySelector('.hero');
+  if ('IntersectionObserver' in window && heroSection) {
+    const heroObserver = new IntersectionObserver(
+      (entries) => {
+        heroIsVisible = entries[0]?.isIntersecting ?? true;
+        if (heroIsVisible) restartHeroAutoTimer();
+        else stopHeroAutoTimer();
+      },
+      { threshold: 0.05 }
+    );
+    heroObserver.observe(heroSection);
+  }
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) stopHeroAutoTimer();
+    else restartHeroAutoTimer();
+  });
+
+  // Preload secondary hero images during idle time to prevent decode stutter
+  const preloadHeroImages = () => {
+    HERO_SLIDES.slice(1).forEach((s) => {
+      const img = new Image();
+      img.decoding = 'async';
+      img.src = s.image;
+    });
+  };
+  if ('requestIdleCallback' in window) {
+    window.requestIdleCallback(preloadHeroImages);
+  } else {
+    setTimeout(preloadHeroImages, 1500);
+  }
 
   document.getElementById('heroPrevBtn')?.addEventListener('click', () => {
     setHeroSlide(currentSlideIndex - 1);
@@ -1263,7 +1348,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   clearSearchBtn?.addEventListener('click', () => {
     searchQuery = '';
-    if (searchInput) searchInput.value = '';
+    if (searchInput) {
+      searchInput.value = '';
+      searchInput.focus();
+    }
     clearSearchBtn.setAttribute('hidden', '');
     renderMenu();
   });
@@ -1283,6 +1371,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const menuToggle = document.getElementById('menuToggle');
   const mobileNav = document.getElementById('mobileNav');
+  const closeMobileNav = (restoreFocus = false) => {
+    if (!mobileNav || mobileNav.hasAttribute('hidden')) return;
+    menuToggle?.setAttribute('aria-expanded', 'false');
+    mobileNav.setAttribute('hidden', '');
+    if (restoreFocus) menuToggle?.focus();
+  };
+
   menuToggle?.addEventListener('click', () => {
     const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true';
     menuToggle.setAttribute('aria-expanded', String(!isExpanded));
@@ -1296,10 +1391,13 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   mobileNav?.querySelectorAll('a').forEach((link) => {
-    link.addEventListener('click', () => {
-      menuToggle?.setAttribute('aria-expanded', 'false');
-      mobileNav.setAttribute('hidden', '');
-    });
+    link.addEventListener('click', () => closeMobileNav(false));
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeMobileNav(true);
+    }
   });
 
   const resForm = document.getElementById('reservationForm');

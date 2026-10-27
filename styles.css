@@ -119,6 +119,12 @@ button {
   border: none;
 }
 
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--palette-orange);
+  outline-offset: 3px;
+}
+
 .container {
   width: min(1220px, 90%);
   margin-inline: auto;
@@ -274,37 +280,14 @@ button {
   text-transform: uppercase;
 }
 
-.btn-header {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  background-color: var(--blue-btn);
-  color: #ffffff;
-  padding: 0.62rem 1.15rem;
-  border-radius: 4px;
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  transition: background-color 0.2s ease;
-}
-
-.btn-header:hover {
-  background-color: var(--blue-btn-hover);
-}
-
-.selection-badge {
-  background: rgba(255, 255, 255, 0.2);
-  color: #ffffff;
-  font-size: 0.68rem;
-  padding: 0.05rem 0.42rem;
-  border-radius: 999px;
-}
-
 .menu-toggle {
   display: none;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   gap: 6px;
+  min-width: 44px;
+  min-height: 44px;
   padding: 0.5rem;
 }
 
@@ -381,6 +364,7 @@ button {
   line-height: 1.13;
   color: #ffffff;
   text-transform: uppercase;
+  text-wrap: balance;
   margin-bottom: 1.45rem;
 }
 
@@ -407,14 +391,11 @@ button {
   font-size: 0.8rem;
   letter-spacing: 0.08em;
   color: var(--text-soft);
+  text-wrap: pretty;
   margin-bottom: 1.65rem;
 }
 
 /* Staggered Editorial Text Reveal on Slide Change */
-.hero__copy > * {
-  will-change: transform, opacity, translate;
-}
-
 .hero__copy.is-exiting .hero__kicker,
 .hero__copy.is-exiting .hero__title,
 .hero__copy.is-exiting .hero__highlight,
@@ -472,6 +453,19 @@ button {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .hero__img.is-animating {
+    animation: none;
+  }
+
+  .promo-slider__track,
+  .promo-slide__img {
+    transition-duration: 0.01ms !important;
+  }
+
   .hero__copy.is-exiting .hero__kicker,
   .hero__copy.is-exiting .hero__title,
   .hero__copy.is-exiting .hero__highlight,
@@ -594,8 +588,10 @@ button {
 .hero__dot {
   position: relative;
   width: 34px;
-  height: 3px;
-  background: rgba(255, 255, 255, 0.22);
+  height: 24px;
+  padding-block: 10.5px;
+  background-color: rgba(255, 255, 255, 0.22);
+  background-clip: content-box;
   overflow: hidden;
   transition: background-color 0.2s ease;
 }
@@ -603,7 +599,7 @@ button {
 .hero__dot.is-active::after {
   content: '';
   position: absolute;
-  inset: 0;
+  inset: 10.5px 0;
   background: rgba(255, 255, 255, 0.85);
   transform-origin: left center;
   animation: heroDotProgress 6s linear forwards;
@@ -647,6 +643,7 @@ button {
   font-weight: 400;
   color: var(--serif-cream);
   line-height: 1.15;
+  text-wrap: balance;
 }
 
 /* ==========================================================================
@@ -785,15 +782,17 @@ button {
 
 .promo-slider__dot {
   width: 36px;
-  height: 4px;
+  height: 24px;
+  padding-block: 10px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.32);
+  background-color: rgba(255, 255, 255, 0.32);
+  background-clip: content-box;
   transition: background-color 0.25s ease, width 0.25s ease;
 }
 
 .promo-slider__dot.is-active {
   width: 52px;
-  background: var(--palette-orange);
+  background-color: var(--palette-orange);
 }
 
 /* ==========================================================================
@@ -968,9 +967,18 @@ button {
 
 .search-box__clear {
   position: absolute;
-  right: 0.85rem;
+  right: 0.45rem;
+  min-width: 28px;
+  min-height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-size: 0.75rem;
   color: var(--text-muted);
+}
+
+.search-box__clear[hidden] {
+  display: none;
 }
 
 .category-pills {
@@ -1062,6 +1070,7 @@ button {
   font-size: 0.82rem;
   color: var(--text-muted);
   line-height: 1.48;
+  text-wrap: pretty;
 }
 
 .menu-item-card__right {
@@ -1076,23 +1085,6 @@ button {
   font-weight: 600;
   color: var(--palette-orange);
   white-space: nowrap;
-}
-
-.btn-add-item {
-  font-size: 0.68rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  padding: 0.22rem 0.55rem;
-  border-radius: 3px;
-  background: rgba(255, 255, 255, 0.04);
-  transition: all 0.2s ease;
-}
-
-.btn-add-item:hover,
-.btn-add-item.is-added {
-  background: var(--blue-btn);
-  color: #ffffff;
 }
 
 .empty-menu-state {
@@ -1125,6 +1117,7 @@ button {
   letter-spacing: 0.06em;
   line-height: 1.16;
   color: #ffffff;
+  text-wrap: balance;
   margin-bottom: 1.25rem;
 }
 
@@ -1138,6 +1131,7 @@ button {
   font-size: 0.94rem;
   color: var(--text-soft);
   max-width: 480px;
+  text-wrap: pretty;
   margin-bottom: 2rem;
 }
 
@@ -1192,6 +1186,7 @@ button {
   font-size: clamp(2.4rem, 4.2vw, 3.35rem);
   font-weight: 400;
   color: var(--serif-cream);
+  text-wrap: balance;
   margin-bottom: 1.2rem;
 }
 
@@ -1199,6 +1194,7 @@ button {
   font-size: 0.96rem;
   color: rgba(255, 255, 255, 0.88);
   line-height: 1.75;
+  text-wrap: pretty;
   margin-bottom: 2.1rem;
 }
 
@@ -1234,41 +1230,8 @@ button {
   font-size: 0.95rem;
   color: var(--text-soft);
   line-height: 1.75;
+  text-wrap: pretty;
   margin-bottom: 1.5rem;
-}
-
-.hours-status {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.65rem;
-  align-self: flex-start;
-  padding: 0.52rem 1rem;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  margin-bottom: 1.75rem;
-}
-
-.hours-status__dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--sand-accent);
-  box-shadow: 0 0 10px rgba(212, 155, 88, 0.7);
-  flex-shrink: 0;
-}
-
-.hours-status.is-closed .hours-status__dot {
-  background: rgba(255, 255, 255, 0.35);
-  box-shadow: none;
-}
-
-.hours-status__text {
-  font-size: 0.78rem;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--text-white);
 }
 
 .hours-visual {

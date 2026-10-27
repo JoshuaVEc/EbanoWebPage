@@ -105,10 +105,10 @@
       </button>
 
       <!-- Minimal bottom slide indicators like NOE -->
-      <div class="hero__dots" role="tablist" aria-label="Diapositivas principales">
-        <button type="button" class="hero__dot is-active" data-slide="0" aria-label="Coctelería de la Casa"></button>
-        <button type="button" class="hero__dot" data-slide="1" aria-label="Especialidades del Mar y Tierra"></button>
-        <button type="button" class="hero__dot" data-slide="2" aria-label="Mañanas Esmeraldeñas"></button>
+      <div class="hero__dots" role="group" aria-label="Diapositivas principales">
+        <button type="button" class="hero__dot is-active" data-slide="0" aria-current="true" aria-label="Coctelería de la Casa"></button>
+        <button type="button" class="hero__dot" data-slide="1" aria-current="false" aria-label="Especialidades del Mar y Tierra"></button>
+        <button type="button" class="hero__dot" data-slide="2" aria-current="false" aria-label="Mañanas Esmeraldeñas"></button>
       </div>
     </section>
 
@@ -133,9 +133,9 @@
           </svg>
         </button>
 
-        <div class="promo-slider__dots" id="promoDots" role="tablist" aria-label="Seleccionar promoción">
-          <button type="button" class="promo-slider__dot is-active" data-promo-slide="0" aria-label="Navidad Frente al Mar"></button>
-          <button type="button" class="promo-slider__dot" data-promo-slide="1" aria-label="Cena de Fin de Año Frente al Mar"></button>
+        <div class="promo-slider__dots" id="promoDots" role="group" aria-label="Seleccionar promoción">
+          <button type="button" class="promo-slider__dot is-active" data-promo-slide="0" aria-current="true" aria-label="Navidad Frente al Mar"></button>
+          <button type="button" class="promo-slider__dot" data-promo-slide="1" aria-current="false" aria-label="Cena de Fin de Año Frente al Mar"></button>
         </div>
       </div>
     </section>
@@ -231,6 +231,7 @@
             src="fotos/hd/aperol-spritz-hd.jpg"
             alt="Cocteles Aperol Spritz en Ébano Kitchen & Bar"
             loading="lazy"
+            decoding="async"
             width="750"
             height="500"
           >
@@ -245,6 +246,7 @@
           src="fotos/hd/salon-mural-hd.jpg"
           alt="Salón principal y mural esmeraldeño de Ébano Kitchen & Bar"
           loading="lazy"
+          decoding="async"
           width="1600"
           height="800"
         >
@@ -279,6 +281,7 @@
                 src="fotos/hd/atardecer-tonsupa-hd.jpg"
                 alt="Atardecer frente al mar en Tonsupa desde Ébano Kitchen & Bar"
                 loading="lazy"
+                decoding="async"
                 width="720"
                 height="440"
               >
