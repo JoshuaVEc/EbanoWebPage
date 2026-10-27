@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+>
+  <url>
+    <loc>https://joshuavec.github.io/EbanoWebPage/</loc>
+    <lastmod>2026-10-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+
+    <!-- Imágenes principales para Google Images -->
+    <image:image>
+      <image:loc>https://joshuavec.github.io/EbanoWebPage/fotos/hd/terraza-atardecer-hd.jpg</image:loc>
+      <image:title>Ébano Kitchen &amp; Bar - Terraza frente al mar en Tonsupa</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://joshuavec.github.io/EbanoWebPage/fotos/hd/pulpo-parrilla-hd.jpg</image:loc>
+      <image:title>Pulpo a la Parrilla - Especialidad en Ébano Kitchen &amp; Bar</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://joshuavec.github.io/EbanoWebPage/fotos/hd/terraza-mar-hd.jpg</image:loc>
+      <image:title>Vista al océano Pacífico desde Ébano Kitchen &amp; Bar en Tonsupa</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://joshuavec.github.io/EbanoWebPage/fotos/hd/salon-mural-hd.jpg</image:loc>
+      <image:title>Salón principal y mural esmeraldeño de Ébano Kitchen &amp; Bar</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://joshuavec.github.io/EbanoWebPage/fotos/hd/aperol-spritz-hd.jpg</image:loc>
+      <image:title>Coctelería clásica internacional en Ébano Kitchen &amp; Bar</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://joshuavec.github.io/EbanoWebPage/fotos/hd/atardecer-tonsupa-hd.jpg</image:loc>
+      <image:title>Atardecer frente al mar en Tonsupa, Esmeraldas</image:title>
+    </image:image>
+  </url>
+</urlset>
