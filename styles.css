@@ -90,7 +90,7 @@ html {
 body {
   background-color: var(--bg-deep);
   color: var(--text-white);
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 img {
@@ -796,13 +796,12 @@ button:focus-visible {
 }
 
 /* ==========================================================================
-   PLATOS DESTACADOS (#0B192C · #1E3E62 · #000000 · #FF6500 Grid)
+   PLATOS DESTACADOS (#1E3E62 · #0B192C · #000000 Grid — Sin naranja en fondo)
    ========================================================================== */
 .featured {
   background:
-    radial-gradient(circle at 18% 22%, rgba(30, 62, 98, 0.45) 0%, transparent 55%),
-    radial-gradient(circle at 85% 78%, rgba(255, 101, 0, 0.08) 0%, transparent 50%),
-    linear-gradient(180deg var(--in-oklch), #0B192C 0%, #1E3E62 52%, #0B192C 100%);
+    radial-gradient(circle at 50% 0%, color-mix(in oklab, #1E3E62 85%, white) 0%, transparent 62%),
+    linear-gradient(180deg var(--in-oklch), #1E3E62 0%, #0B192C 100%);
 }
 
 .featured__grid {
@@ -875,14 +874,12 @@ button:focus-visible {
 }
 
 /* ==========================================================================
-   MINIMALIST MENU SECTION (LA CARTA — #0B192C · #1E3E62 · #000000 · #FF6500)
+   MINIMALIST MENU SECTION (LA CARTA — #0B192C · #000000 — Sin naranja en fondo)
    ========================================================================== */
 .menu-section {
   background:
-    radial-gradient(circle at 86% 18%, rgba(30, 62, 98, 0.55) 0%, transparent 55%),
-    radial-gradient(circle at 14% 52%, rgba(30, 62, 98, 0.45) 0%, transparent 55%),
-    radial-gradient(circle at 82% 84%, rgba(255, 101, 0, 0.08) 0%, transparent 52%),
-    linear-gradient(180deg var(--in-oklch), #000000 0%, #0B192C 45%, #1E3E62 82%, #0B192C 100%);
+    radial-gradient(circle at 85% 15%, rgba(30, 62, 98, 0.45) 0%, transparent 55%),
+    linear-gradient(180deg var(--in-oklch), #0B192C 0%, #000000 50%, #0B192C 100%);
 }
 
 /* Borderless Minimal Moment Tabs */
@@ -1094,12 +1091,12 @@ button:focus-visible {
 }
 
 /* ==========================================================================
-   BAR SPOTLIGHT (#000000 · #0B192C · #1E3E62 · #FF6500 Banner)
+   BAR SPOTLIGHT (#1E3E62 · #0B192C · #000000 Banner — Sin naranja en fondo)
    ========================================================================== */
 .bar-banner {
   background:
-    radial-gradient(circle at 76% 52%, rgba(255, 101, 0, 0.16) 0%, rgba(30, 62, 98, 0.65) 45%, #000000 92%),
-    linear-gradient(95deg var(--in-oklch), #000000 0%, #0B192C 50%, #1E3E62 100%);
+    radial-gradient(circle at 76% 52%, color-mix(in oklab, #1E3E62 82%, white) 0%, #1E3E62 48%, #0B192C 96%),
+    linear-gradient(135deg var(--in-oklch), #1E3E62 0%, #0B192C 100%);
   padding: 5.5rem 0;
 }
 
@@ -1199,13 +1196,12 @@ button:focus-visible {
 }
 
 /* ==========================================================================
-   HORARIOS DE ATENCIÓN (#000000 · #0B192C · #1E3E62 · #FF6500 Section)
+   HORARIOS DE ATENCIÓN (#0B192C · #1E3E62 · #000000 — Sin naranja en fondo)
    ========================================================================== */
 .hours-section {
   background:
-    radial-gradient(circle at 20% 78%, rgba(30, 62, 98, 0.45) 0%, transparent 52%),
-    radial-gradient(circle at 82% 24%, rgba(255, 101, 0, 0.08) 0%, transparent 52%),
-    linear-gradient(180deg var(--in-oklch), #0B192C 0%, #1E3E62 55%, #0B192C 100%);
+    radial-gradient(circle at 20% 78%, rgba(30, 62, 98, 0.6) 0%, transparent 55%),
+    linear-gradient(180deg var(--in-oklch), #0B192C 0%, #1E3E62 100%);
   padding: 5.5rem 0;
 }
 
@@ -1703,15 +1699,26 @@ button:focus-visible {
 }
 
 /* ==========================================================================
-   SECTION STACKING & PERFORMANCE OPTIMIZATION
+   PURE CSS STICKY SECTION STACKING (Zero JS · 60/120 FPS Native Compositor)
+   Cada sección se fija con position: sticky; top: 0; mientras la siguiente
+   se desliza hacia arriba con un z-index superior y la cubre fluidamente.
    ========================================================================== */
+.hero,
+.promos-section,
+.featured,
+.bar-banner,
+.komein-banner,
+.hours-section,
+.map-section {
+  position: sticky;
+  top: 0;
+}
+
 .hero {
-  position: relative;
   z-index: 1;
 }
 
 .promos-section {
-  position: relative;
   z-index: 2;
   padding: 0;
   margin: 0;
@@ -1720,23 +1727,81 @@ button:focus-visible {
   box-shadow: none;
 }
 
-.featured,
-.menu-section,
-.bar-banner,
-.komein-banner,
-.hours-section,
-.map-section,
-.reservations,
-.footer {
-  position: relative;
+.featured {
+  z-index: 3;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 -20px 44px rgba(0, 0, 0, 0.72);
 }
 
-.menu-section,
-.hours-section,
-.map-section,
+/* La Carta es extensa (>100dvh): sube cubriendo Destacados con z-index 4
+   y permite desplazarse por todas las categorías antes de la siguiente capa */
+.menu-section {
+  position: relative;
+  z-index: 4;
+  box-shadow: 0 -20px 44px rgba(0, 0, 0, 0.78);
+}
+
+.bar-banner {
+  z-index: 5;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 -20px 44px rgba(0, 0, 0, 0.72);
+}
+
+.komein-banner {
+  z-index: 6;
+  min-height: 100vh;
+  min-height: 100dvh;
+  box-shadow: 0 -20px 44px rgba(0, 0, 0, 0.78);
+}
+
+.hours-section {
+  z-index: 7;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 -20px 44px rgba(0, 0, 0, 0.72);
+}
+
+.map-section {
+  z-index: 8;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 -20px 44px rgba(0, 0, 0, 0.78);
+}
+
 .reservations {
-  content-visibility: auto;
-  contain-intrinsic-size: auto 700px;
+  position: relative;
+  z-index: 9;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 -20px 44px rgba(0, 0, 0, 0.75);
+}
+
+.footer {
+  position: relative;
+  z-index: 10;
+  box-shadow: 0 -20px 44px rgba(0, 0, 0, 0.85);
+}
+
+/* En móviles donde las grillas pasan a 1 columna y superan 100dvh de alto,
+   las secciones largas fluyen sin recortar contenido mientras las de 1 pantalla siguen apilándose */
+@media (max-width: 960px) {
+  .featured,
+  .hours-section {
+    position: relative;
+    min-height: auto;
+  }
 }
 
 /* ==========================================================================
