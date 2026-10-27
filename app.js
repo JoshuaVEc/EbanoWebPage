@@ -820,43 +820,21 @@ function setHeroSlide(index) {
 }
 
 /* ==========================================================================
-   INFINITE BIDIRECTIONAL PROMO SLIDER
+   INFINITE BIDIRECTIONAL PROMO SLIDER (Joined Poster Strip · 7s Auto-Slide)
    ========================================================================== */
-const PROMO_AUTO_INTERVAL_MS = 5500;
+const PROMO_AUTO_INTERVAL_MS = 7000;
 
 function buildPromoSlideHTML(promo, isClone = false) {
-  const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(promo.waMessage)}`;
-  const perksHtml = promo.perks
-    .map((p) => `<li class="promo-card__perk">${p}</li>`)
-    .join('');
-
   return `
     <div class="promo-slide" ${isClone ? 'aria-hidden="true"' : ''}>
-      <article class="promo-card">
-        <div class="promo-card__poster-wrap">
-          <img
-            src="${promo.image}"
-            alt="${isClone ? '' : promo.alt}"
-            class="promo-card__poster"
-            loading="lazy"
-            width="682"
-            height="1024"
-          >
-        </div>
-        <div class="promo-card__info">
-          <span class="promo-card__badge">${promo.badge}</span>
-          <h3 class="promo-card__title">${promo.title}</h3>
-          <p class="promo-card__desc">${promo.desc}</p>
-          <ul class="promo-card__perks">${perksHtml}</ul>
-          <div class="promo-card__pricing">
-            <span class="promo-card__price">${promo.price}<small>${promo.priceUnit}</small></span>
-            <span class="promo-card__group-note">★ ${promo.groupNote}</span>
-          </div>
-          <a href="${waUrl}" target="_blank" rel="noopener noreferrer" class="btn btn--sand" ${isClone ? 'tabindex="-1"' : ''}>
-            ${promo.ctaText}
-          </a>
-        </div>
-      </article>
+      <img
+        src="${promo.image}"
+        alt="${isClone ? '' : promo.alt}"
+        class="promo-slide__img"
+        loading="lazy"
+        width="682"
+        height="1024"
+      >
     </div>
   `;
 }
@@ -870,21 +848,25 @@ function initPromoSlider() {
   if (!track || !viewport || PROMO_SLIDES.length === 0) return;
 
   const total = PROMO_SLIDES.length;
-  // Track layout: [clone(last), slide(0), slide(1), ..., clone(0)]
-  const firstClone = buildPromoSlideHTML(PROMO_SLIDES[0], true);
-  const lastClone = buildPromoSlideHTML(PROMO_SLIDES[total - 1], true);
+  // Track layout: [clone(0..total-1), real(0..total-1), clone(0..total-1)]
+  const preClones = PROMO_SLIDES.map((p) => buildPromoSlideHTML(p, true)).join('');
   const realSlides = PROMO_SLIDES.map((p) => buildPromoSlideHTML(p, false)).join('');
+  const postClones = PROMO_SLIDES.map((p) => buildPromoSlideHTML(p, true)).join('');
 
-  track.innerHTML = lastClone + realSlides + firstClone;
+  track.innerHTML = preClones + realSlides + postClones;
+  const slideEls = Array.from(track.querySelectorAll('.promo-slide'));
 
-  let trackIndex = 1; // Starts at first real slide
+  let trackIndex = total; // Starts at first real slide (index 2)
   let isTransitioning = false;
   let autoTimer = null;
 
-  const updateDots = () => {
-    const realIdx = ((trackIndex - 1) % total + total) % total;
+  const updateActiveStates = () => {
+    const realIdx = ((trackIndex - total) % total + total) % total;
     dots.forEach((dot, idx) => {
       dot.classList.toggle('is-active', idx === realIdx);
+    });
+    slideEls.forEach((slideEl, idx) => {
+      slideEl.classList.toggle('is-active', idx === trackIndex);
     });
   };
 
@@ -894,21 +876,22 @@ function initPromoSlider() {
     } else {
       track.classList.remove('is-instant');
     }
-    track.style.transform = `translate3d(-${trackIndex * 100}%, 0, 0)`;
+    track.style.setProperty('--track-index', String(trackIndex));
+    track.style.setProperty('--drag-x', '0px');
+    updateActiveStates();
     if (instant) {
-      // Force reflow so subsequent transitions animate cleanly
+      // Force reflow so subsequent transitions and filters animate cleanly
       void track.offsetWidth;
       track.classList.remove('is-instant');
     }
-    updateDots();
   };
 
   const snapIfClone = () => {
-    if (trackIndex <= 0) {
-      trackIndex = total;
+    if (trackIndex < total) {
+      trackIndex += total;
       setPosition(true);
-    } else if (trackIndex > total) {
-      trackIndex = 1;
+    } else if (trackIndex >= total * 2) {
+      trackIndex -= total;
       setPosition(true);
     }
   };
@@ -958,24 +941,29 @@ function initPromoSlider() {
     dot.addEventListener('click', () => {
       const targetIdx = parseInt(dot.getAttribute('data-promo-slide') || '0', 10);
       if (isTransitioning) snapIfClone();
+      const targetTrackIdx = total + targetIdx;
+      if (targetTrackIdx === trackIndex) return;
       isTransitioning = true;
-      trackIndex = targetIdx + 1;
+      trackIndex = targetTrackIdx;
       setPosition(false);
       restartAuto();
     });
   });
 
-  // Pointer / Touch Drag Support (Swipe left or right)
+  // Pointer / Touch Drag Support (Swipe left or right, or tap neighboring censored slide)
   let startX = 0;
   let deltaX = 0;
   let isDragging = false;
+  let pointerDownSlideIdx = -1;
 
   viewport.addEventListener('pointerdown', (e) => {
-    if (e.target.closest('a, button')) return;
+    if (e.target.closest('button')) return;
     if (isTransitioning) {
       isTransitioning = false;
       snapIfClone();
     }
+    const clickedSlide = e.target.closest('.promo-slide');
+    pointerDownSlideIdx = clickedSlide ? slideEls.indexOf(clickedSlide) : -1;
     isDragging = true;
     startX = e.clientX;
     deltaX = 0;
@@ -987,9 +975,7 @@ function initPromoSlider() {
   viewport.addEventListener('pointermove', (e) => {
     if (!isDragging) return;
     deltaX = e.clientX - startX;
-    const width = viewport.clientWidth || 1;
-    const offsetPct = -(trackIndex * 100) + (deltaX / width) * 100;
-    track.style.transform = `translate3d(${offsetPct}%, 0, 0)`;
+    track.style.setProperty('--drag-x', `${deltaX.toFixed(1)}px`);
   });
 
   const endDrag = () => {
@@ -997,16 +983,23 @@ function initPromoSlider() {
     isDragging = false;
     track.classList.remove('is-instant');
     const width = viewport.clientWidth || 1;
-    const threshold = Math.min(70, width * 0.14);
+    const threshold = Math.min(65, width * 0.12);
 
     if (deltaX < -threshold) {
       moveNext();
     } else if (deltaX > threshold) {
       movePrev();
+    } else if (Math.abs(deltaX) < 6 && pointerDownSlideIdx !== -1 && pointerDownSlideIdx !== trackIndex) {
+      if (pointerDownSlideIdx < trackIndex) {
+        movePrev();
+      } else {
+        moveNext();
+      }
     } else {
       isTransitioning = true;
       setPosition(false);
     }
+    pointerDownSlideIdx = -1;
     restartAuto();
   };
 
@@ -1022,7 +1015,7 @@ function initPromoSlider() {
     if (!isDragging) restartAuto();
   });
 
-  // Initialize starting position and start infinite auto-loop
+  // Initialize starting position and start 7s infinite auto-loop
   setPosition(true);
   restartAuto();
 }
