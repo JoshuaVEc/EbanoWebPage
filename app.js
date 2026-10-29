@@ -10,33 +10,33 @@ const WHATSAPP_NUMBER = '593999002427';
  */
 const HERO_SLIDES = [
   {
-    kicker: 'COCINA ESMERALDEÑA & BAR',
+    kicker: 'ÉBANO KITCHEN & BAR · TONSUPA',
     title: 'SABOR DEL PACÍFICO',
-    subtitle: 'Y COCTELERÍA DE LA CASA',
-    highlight: 'DESAYUNOS · MARISCOS · COCTELERÍA',
-    note: '*Tradición esmeraldeña y coctelería clásica global frente al mar en Tonsupa.',
+    subtitle: 'ÉBANO KITCHEN & BAR · TONSUPA',
+    highlight: 'DESAYUNOS · MARISCOS · COCTELERÍA DE LA CASA',
+    note: '*Ébano Kitchen & Bar: tradición esmeraldeña y coctelería clásica global frente al mar en Tonsupa.',
     ctaText: 'EXPLORAR LA CARTA',
     ctaHref: '#carta',
     image: 'fotos/hd/terraza-atardecer-hd.jpg',
     alt: 'Terraza frente al mar y barra de Ébano Kitchen & Bar al atardecer'
   },
   {
-    kicker: 'ESPECIALIDAD DE LA CASA',
+    kicker: 'ÉBANO KITCHEN & BAR · ESPECIALIDAD EN TONSUPA',
     title: 'HERENCIA DEL MAR',
     subtitle: 'PULPO A LA PARRILLA, ENCOCADOS Y MARISCOS',
     highlight: 'MARISCOS FRESCOS DEL PACÍFICO · JUEVES A LUNES',
-    note: '*Pulpo a la parrilla, parrilladas marineras, encocados y cortes nobles.',
+    note: '*Ébano Kitchen & Bar en Tonsupa: pulpo a la parrilla, parrilladas marineras, encocados y cortes nobles.',
     ctaText: 'VER PLATOS DEL MAR',
     ctaHref: '#carta',
     image: 'fotos/hd/pulpo-parrilla-hd.jpg?v=2',
     alt: 'Pulpo a la parrilla en Ébano Kitchen & Bar'
   },
   {
-    kicker: 'FRENTE AL MAR EN TONSUPA',
+    kicker: 'ÉBANO KITCHEN & BAR · FRENTE AL MAR EN TONSUPA',
     title: 'BRISA Y TRADICIÓN',
     subtitle: 'MAÑANAS, ALMUERZOS Y ATARDECERES',
     highlight: 'JUEVES A LUNES · 08:00 AM A 07:30 PM',
-    note: '*Martes y Miércoles cerrado. Todos nuestros desayunos, bolones y tigrillos incluyen café recién pasado.',
+    note: '*Ébano Kitchen & Bar en Tonsupa (Martes y Miércoles cerrado). Todos nuestros desayunos, bolones y tigrillos incluyen café recién pasado.',
     ctaText: 'RESERVAR UNA MESA',
     ctaHref: '#reservas',
     image: 'fotos/hd/terraza-mar-hd.jpg',
