@@ -1392,6 +1392,55 @@ button:focus-visible {
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+.hours-row.is-open-holiday {
+  background: rgba(255, 101, 0, 0.18);
+  border: 1px solid var(--palette-orange);
+}
+
+.hours-row.is-open-holiday .hours-row__day {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.hours-row.is-open-holiday .hours-row__time {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.hours-row__holiday-badge {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  padding: 0.14rem 0.5rem;
+  border-radius: 999px;
+  background: rgba(255, 101, 0, 0.25);
+  border: 1px solid var(--palette-orange);
+  color: #ff9d5c;
+  text-transform: uppercase;
+}
+
+.hours-status-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.65rem 0.9rem;
+  margin-bottom: 1.2rem;
+  border-radius: 6px;
+  background: rgba(255, 101, 0, 0.12);
+  border: 1px solid var(--palette-orange);
+  font-size: 0.8rem;
+  color: #ffffff;
+}
+
+.hours-status-banner__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 8px #22c55e;
+  flex-shrink: 0;
+}
+
 .hours-card__footer p {
   font-size: 0.78rem;
   color: var(--text-muted);

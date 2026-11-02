@@ -343,8 +343,13 @@
           <!-- Columna Derecha: Tabla Minimalista de Horarios -->
           <div class="hours-card" aria-label="Tabla semanal de horarios">
             <div class="hours-card__header">
-              <span class="hours-card__kicker">SEMANA COMPLETA</span>
+              <span class="hours-card__kicker">SEMANA COMPLETA &amp; FERIADOS</span>
               <h3 class="hours-card__title">Días &amp; Apertura</h3>
+            </div>
+
+            <div id="holidayBanner" class="hours-status-banner" hidden>
+              <span class="hours-status-banner__dot" aria-hidden="true"></span>
+              <span id="holidayBannerText">¡Atención por Feriado en Ecuador! Abierto hoy de 8:00 AM a 7:30 PM.</span>
             </div>
 
             <ul class="hours-list" id="hoursList">
@@ -370,18 +375,20 @@
                 <span class="hours-row__day">
                   Martes
                   <span class="hours-row__today-badge" hidden>HOY</span>
+                  <span class="hours-row__holiday-badge" hidden>FERIADO ABIERTO</span>
                 </span>
                 <span class="hours-row__line" aria-hidden="true"></span>
-                <span class="hours-row__time hours-row__time--closed">Cerrado</span>
+                <span class="hours-row__time hours-row__time--closed">Cerrado <small style="font-size: 0.65rem; opacity: 0.8; text-transform: none;">(Abierto en feriados)</small></span>
               </li>
 
               <li class="hours-row hours-row--closed" data-day="3">
                 <span class="hours-row__day">
                   Miércoles
                   <span class="hours-row__today-badge" hidden>HOY</span>
+                  <span class="hours-row__holiday-badge" hidden>FERIADO ABIERTO</span>
                 </span>
                 <span class="hours-row__line" aria-hidden="true"></span>
-                <span class="hours-row__time hours-row__time--closed">Cerrado</span>
+                <span class="hours-row__time hours-row__time--closed">Cerrado <small style="font-size: 0.65rem; opacity: 0.8; text-transform: none;">(Abierto en feriados)</small></span>
               </li>
 
               <li class="hours-row" data-day="4">
@@ -413,7 +420,7 @@
             </ul>
 
             <div class="hours-card__footer">
-              <p>* Desayunos desde la hora de apertura · Cocina, parrilla y coctelería hasta las 7:30 PM.</p>
+              <p>* Desayunos desde la hora de apertura · Cocina, parrilla y coctelería hasta las 7:30 PM. <strong>¡En días feriados de Ecuador abrimos con normalidad de 8:00 AM a 7:30 PM!</strong></p>
               <div class="hours-card__actions">
                 <a href="#reservas" class="btn btn--sand">RESERVAR EN ESTE HORARIO</a>
                 <a href="https://wa.me/593999002427?text=Hola%20%C3%89bano%20Kitchen%20%26%20Bar%2C%20quisiera%20consultar%20disponibilidad." target="_blank" rel="noopener noreferrer" class="btn btn--ghost">CONSULTAR POR WHATSAPP</a>
@@ -457,7 +464,7 @@
           <span class="kicker">RESERVACIONES</span>
           <h2 id="reservasTitle" class="section-title">Reserva tu Mesa</h2>
           <p class="reservations__sub">
-            Jueves a Lunes: 8:00 AM – 7:30 PM (Martes y Miércoles cerrado).
+            Jueves a Lunes y Feriados de Ecuador: 8:00 AM – 7:30 PM (Martes y Miércoles no feriado cerrado).
           </p>
         </div>
 

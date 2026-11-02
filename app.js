@@ -36,7 +36,7 @@ const HERO_SLIDES = [
     title: 'BRISA Y TRADICIÓN',
     subtitle: 'MAÑANAS, ALMUERZOS Y ATARDECERES',
     highlight: 'JUEVES A LUNES · 08:00 AM A 07:30 PM',
-    note: '*Ébano Kitchen & Bar en Tonsupa (Martes y Miércoles cerrado). Todos nuestros desayunos, bolones y tigrillos incluyen café recién pasado.',
+    note: '*Ébano Kitchen & Bar en Tonsupa (Martes y Miércoles habitual cerrado · ¡Abierto en feriados!). Todos nuestros desayunos, bolones y tigrillos incluyen café recién pasado.',
     ctaText: 'RESERVAR UNA MESA',
     ctaHref: '#reservas',
     image: 'fotos/hd/terraza-mar-hd.jpg',
@@ -1448,31 +1448,178 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Live Opening Hours Status & Today Row Highlight (Tonsupa / America/Guayaquil)
-  const updateLiveHoursStatus = () => {
-    const schedule = {
-      0: { open: 8.0, close: 19.5, label: '8:00 AM – 7:30 PM' }, // Domingo
-      1: { open: 8.0, close: 19.5, label: '8:00 AM – 7:30 PM' }, // Lunes
-      2: null, // Martes (Cerrado)
-      3: null, // Miércoles (Cerrado)
-      4: { open: 8.0, close: 19.5, label: '8:00 AM – 7:30 PM' }, // Jueves
-      5: { open: 8.0, close: 19.5, label: '8:00 AM – 7:30 PM' }, // Viernes
-      6: { open: 8.0, close: 19.5, label: '8:00 AM – 7:30 PM' }  // Sábado
+  // Official Ecuador National Public Holidays (Ley de Feriados Nacionales de Ecuador)
+  const ECUADOR_NATIONAL_HOLIDAYS = {
+    // 2024
+    '2024-01-01': 'Año Nuevo',
+    '2024-02-12': 'Carnaval',
+    '2024-02-13': 'Carnaval',
+    '2024-03-29': 'Viernes Santo',
+    '2024-05-03': 'Día del Trabajo',
+    '2024-05-24': 'Batalla de Pichincha',
+    '2024-08-09': 'Primer Grito de Independencia',
+    '2024-10-11': 'Independencia de Guayaquil',
+    '2024-11-01': 'Día de los Difuntos',
+    '2024-11-04': 'Independencia de Cuenca',
+    '2024-12-25': 'Navidad',
+
+    // 2025
+    '2025-01-01': 'Año Nuevo',
+    '2025-03-03': 'Carnaval',
+    '2025-03-04': 'Carnaval',
+    '2025-04-18': 'Viernes Santo',
+    '2025-05-02': 'Día del Trabajo',
+    '2025-05-23': 'Batalla de Pichincha',
+    '2025-08-08': 'Primer Grito de Independencia',
+    '2025-10-10': 'Independencia de Guayaquil',
+    '2025-11-03': 'Día de los Difuntos',
+    '2025-11-04': 'Independencia de Cuenca',
+    '2025-12-25': 'Navidad',
+
+    // 2026
+    '2026-01-01': 'Año Nuevo',
+    '2026-01-02': 'Feriado Nacional Decreto',
+    '2026-02-16': 'Carnaval',
+    '2026-02-17': 'Carnaval',
+    '2026-04-03': 'Viernes Santo',
+    '2026-05-01': 'Día del Trabajo',
+    '2026-05-25': 'Batalla de Pichincha',
+    '2026-08-10': 'Primer Grito de Independencia',
+    '2026-10-09': 'Independencia de Guayaquil',
+    '2026-11-02': 'Día de los Difuntos',
+    '2026-11-03': 'Independencia de Cuenca',
+    '2026-12-25': 'Navidad',
+
+    // 2027
+    '2027-01-01': 'Año Nuevo',
+    '2027-02-08': 'Carnaval',
+    '2027-02-09': 'Carnaval',
+    '2027-03-26': 'Viernes Santo',
+    '2027-04-30': 'Día del Trabajo',
+    '2027-05-24': 'Batalla de Pichincha',
+    '2027-08-09': 'Primer Grito de Independencia',
+    '2027-10-08': 'Independencia de Guayaquil',
+    '2027-11-01': 'Día de los Difuntos',
+    '2027-11-02': 'Independencia de Cuenca',
+    '2027-12-24': 'Navidad',
+    '2027-12-25': 'Navidad',
+
+    // 2028
+    '2028-01-01': 'Año Nuevo',
+    '2028-02-28': 'Carnaval',
+    '2028-02-29': 'Carnaval',
+    '2028-04-14': 'Viernes Santo',
+    '2028-05-01': 'Día del Trabajo',
+    '2028-05-26': 'Batalla de Pichincha',
+    '2028-08-11': 'Primer Grito de Independencia',
+    '2028-10-09': 'Independencia de Guayaquil',
+    '2028-11-02': 'Día de los Difuntos',
+    '2028-11-03': 'Independencia de Cuenca',
+    '2028-12-25': 'Navidad'
+  };
+
+  const getEcuadorHolidayInfo = (dateObj) => {
+    const pad = (n) => String(n).padStart(2, '0');
+    const y = dateObj.getFullYear();
+    const dateStr = `${y}-${pad(dateObj.getMonth() + 1)}-${pad(dateObj.getDate())}`;
+
+    if (ECUADOR_NATIONAL_HOLIDAYS[dateStr]) {
+      return { isHoliday: true, name: ECUADOR_NATIONAL_HOLIDAYS[dateStr], dateStr };
+    }
+
+    // Dynamic fallback calculation for future years not hardcoded
+    const easterCal = (year) => {
+      const f = Math.floor;
+      const G = year % 19;
+      const C = f(year / 100);
+      const H = (C - f(C / 4) - f((8 * C + 13) / 25) + 19 * G + 15) % 30;
+      const I = H - f(H / 28) * (1 - f(29 / (H + 1)) * f((21 - G) / 11));
+      const J = (year + f(year / 4) + I + 2 - C + f(C / 4)) % 7;
+      const L = I - J;
+      const month = 3 + f((L + 40) / 44);
+      const day = L + 28 - 31 * f(month / 4);
+      return new Date(year, month - 1, day);
     };
 
+    const addDays = (d, n) => {
+      const res = new Date(d);
+      res.setDate(res.getDate() + n);
+      return res;
+    };
+
+    const easter = easterCal(y);
+    const carnivalMon = addDays(easter, -48);
+    const carnivalTue = addDays(easter, -47);
+    const goodFriday = addDays(easter, -2);
+
+    const checkDates = [
+      { d: carnivalMon, name: 'Carnaval' },
+      { d: carnivalTue, name: 'Carnaval' },
+      { d: goodFriday, name: 'Viernes Santo' }
+    ];
+
+    for (const item of checkDates) {
+      const s = `${item.d.getFullYear()}-${pad(item.d.getMonth() + 1)}-${pad(item.d.getDate())}`;
+      if (s === dateStr) return { isHoliday: true, name: item.name, dateStr };
+    }
+
+    return { isHoliday: false, name: null, dateStr };
+  };
+
+  // Live Opening Hours Status & Today Row Highlight (Tonsupa / America/Guayaquil)
+  const updateLiveHoursStatus = () => {
     const now = new Date();
     const ecDate = new Date(now.toLocaleString('en-US', { timeZone: 'America/Guayaquil' }));
     const dayIdx = ecDate.getDay();
     const decimalHour = ecDate.getHours() + ecDate.getMinutes() / 60;
 
+    const todayHoliday = getEcuadorHolidayInfo(ecDate);
+
+    // Banner de feriado si hoy es feriado en Ecuador
+    const banner = document.getElementById('holidayBanner');
+    const bannerText = document.getElementById('holidayBannerText');
+    if (banner && todayHoliday.isHoliday) {
+      banner.removeAttribute('hidden');
+      if (bannerText) {
+        bannerText.textContent = `¡Hoy atendemos por Feriado Nacional (${todayHoliday.name})! Horario especial: 8:00 AM – 7:30 PM.`;
+      }
+    } else if (banner) {
+      banner.setAttribute('hidden', '');
+    }
+
     document.querySelectorAll('#hoursList .hours-row').forEach((row) => {
       const rowDay = parseInt(row.getAttribute('data-day') || '-1', 10);
       const isToday = rowDay === dayIdx;
       row.classList.toggle('is-today', isToday);
+
       const badge = row.querySelector('.hours-row__today-badge');
       if (badge) {
         if (isToday) badge.removeAttribute('hidden');
         else badge.setAttribute('hidden', '');
+      }
+
+      // Si hoy es martes (2) o miércoles (3) pero es feriado nacional en Ecuador, el local está ABIERTO
+      if (isToday && (rowDay === 2 || rowDay === 3)) {
+        const timeEl = row.querySelector('.hours-row__time');
+        const holidayBadge = row.querySelector('.hours-row__holiday-badge');
+
+        if (todayHoliday.isHoliday) {
+          row.classList.remove('hours-row--closed');
+          row.classList.add('is-open-holiday');
+          if (timeEl) {
+            timeEl.textContent = '8:00 AM – 7:30 PM';
+            timeEl.classList.remove('hours-row__time--closed');
+          }
+          if (holidayBadge) holidayBadge.removeAttribute('hidden');
+        } else {
+          row.classList.add('hours-row--closed');
+          row.classList.remove('is-open-holiday');
+          if (timeEl) {
+            timeEl.innerHTML = 'Cerrado <small style="font-size: 0.65rem; opacity: 0.8; text-transform: none;">(Abierto en feriados)</small>';
+            timeEl.classList.add('hours-row__time--closed');
+          }
+          if (holidayBadge) holidayBadge.setAttribute('hidden', '');
+        }
       }
     });
   };
